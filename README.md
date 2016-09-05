@@ -1,2 +1,3 @@
-# battle-of-elements
-Just another game.
+# Battle of Elements
+
+Just another text-based RPG.
