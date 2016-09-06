@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ElementList {
+public class SummonedElementBank {
     private final List<Element> elementList;
     private final int maxSize;
 
-    public ElementList(int maxSize) {
+    public SummonedElementBank(int maxSize) {
         elementList = new ArrayList<>();
         this.maxSize = maxSize;
     }
 
     public void add(Element element) {
         if (elementList.size() >= maxSize) {
-            throw new ElementListFullException();
+            throw new SummonedElementBankFullException();
         }
 
         elementList.add(element);
