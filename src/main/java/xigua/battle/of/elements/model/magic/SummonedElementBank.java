@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model;
+package xigua.battle.of.elements.model.magic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +13,13 @@ public class SummonedElementBank {
         this.maxSize = maxSize;
     }
 
+    public int getMaxSize() {
+        return maxSize;
+    }
+
     public void add(Element element) {
         if (elementList.size() >= maxSize) {
-            throw new SummonedElementBankFullException();
+            throw new RuntimeException("The summoned element bank is full.");
         }
 
         elementList.add(element);

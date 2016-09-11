@@ -2,6 +2,8 @@ package xigua.battle.of.elements.model;
 
 import org.junit.Before;
 import org.junit.Test;
+import xigua.battle.of.elements.model.magic.Element;
+import xigua.battle.of.elements.model.magic.SummonedElementBank;
 
 import java.util.List;
 
@@ -28,7 +30,8 @@ public class SummonedElementBankTest {
     public void addWhenElementBankIsFull_ExceptionThrown() {
         addTwoElementsToBank();
 
-        assertThatThrownBy(() -> summonedElementBank.add(Element.WOOD)).isInstanceOf(SummonedElementBankFullException.class);
+        assertThatThrownBy(() -> summonedElementBank.add(Element.WOOD)).isInstanceOf(RuntimeException.class)
+                .hasMessage("The summoned element bank is full.");
     }
 
     @Test
@@ -41,7 +44,8 @@ public class SummonedElementBankTest {
     @Test
     public void toList_ResultListUnmodifiable() throws Exception {
         assertThat(summonedElementBank.toList()).isInstanceOf(List.class);
-        assertThatThrownBy(() -> summonedElementBank.toList().add(Element.FIRE)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> summonedElementBank.toList().add(Element.FIRE)).isInstanceOf
+                (UnsupportedOperationException.class);
     }
 
     @Test
