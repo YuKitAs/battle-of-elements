@@ -1,7 +1,7 @@
-package xigua.battle.of.elements.logic.magic;
+package xigua.battle.of.elements.logic.battle.magic;
 
-import xigua.battle.of.elements.model.magic.Element;
-import xigua.battle.of.elements.model.magic.Magic;
+import xigua.battle.of.elements.model.battle.magic.Element;
+import xigua.battle.of.elements.model.battle.magic.Magic;
 
 import java.util.ArrayList;
 import java.util.List;
