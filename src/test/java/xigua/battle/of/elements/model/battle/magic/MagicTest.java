@@ -23,18 +23,18 @@ public class MagicTest {
     }
 
     @Test
-    public void getElement() {
+    public void getElement_SameWithConstructorParameters() {
         assertThat(magic.getElement()).isEqualTo(Element.FIRE);
     }
 
     @Test
-    public void getEffects() {
+    public void getEffects__SameWithConstructorParameters() {
         assertThat(effects.get(0)).isEqualTo(Magic.Effect.DAMAGE);
         assertThat(effects.get(1)).isEqualTo(Magic.Effect.DEBUFF);
     }
 
     @Test
-    public void effectListUnmodifiable() {
+    public void getEffects_EffectListUnmodifiable() {
         List<Magic.Effect> effectList = magic.getEffects();
         assertThatThrownBy(() -> effectList.add(Magic.Effect.BLOCK)).isInstanceOf
                 (UnsupportedOperationException.class);
