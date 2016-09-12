@@ -28,7 +28,7 @@ public class MagicTest {
     }
 
     @Test
-    public void getEffects__SameWithConstructorParameters() {
+    public void getEffects_SameWithConstructorParameters() {
         assertThat(effects.get(0)).isEqualTo(Magic.Effect.DAMAGE);
         assertThat(effects.get(1)).isEqualTo(Magic.Effect.DEBUFF);
     }
