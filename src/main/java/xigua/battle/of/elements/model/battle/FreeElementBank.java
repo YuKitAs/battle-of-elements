@@ -9,11 +9,9 @@ public class FreeElementBank extends ElementBank {
         return elementList.contains(element);
     }
 
-    public Element getOneAndDelete(Element element) {
-        if (hasElement(element)) {
-            return null;
+    public void deleteElement(Element element) {
+        if (!elementList.remove(element)) {
+            throw new RuntimeException("No such element in element bank.");
         }
-
-        return element;
     }
 }

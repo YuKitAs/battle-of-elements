@@ -15,31 +15,13 @@ public class MagicFactory {
             return Magic.EMPTY;
         }
 
-        Element typeElement = summonedElementBank.getFirst();
+        Element effectElement = summonedElementBank.getFirst();
 
-        return new Magic(getMagicTypeFromElement(typeElement), summonedElementBank.getSecond(), summonedElementBank
-                .getElementLevelCount(typeElement), summonedElementBank.getElementLevelCount(typeElement
-                .getDestructedElement()));
+        return new Magic(effectElement, summonedElementBank.getSecond(), summonedElementBank.getElementLevelCount
+                (effectElement), summonedElementBank.getElementLevelCount(effectElement.getDestructedElement()));
     }
 
-    public Magic buildPhysicalAttack(int level) {
-        return new Magic(Magic.Type.ATTACK, Element.NONE, level, 0);
-    }
-
-    public Magic buildPhysicalDefence(int level) {
-        return new Magic(Magic.Type.DEFEND, Element.NONE, level, 0);
-    }
-
-    private Magic.Type getMagicTypeFromElement(Element element) {
-        switch (element) {
-            case FIRE:
-                return Magic.Type.ATTACK;
-            case WATER:
-                return Magic.Type.DEFEND;
-            case WOOD:
-                return Magic.Type.RECOVER;
-            default:
-                throw new RuntimeException("Unknown element for magic type.");
-        }
+    public Magic buildNonTypedMagic(Element effectElement, int primaryLevel) {
+        return new Magic(effectElement, Element.NONE, primaryLevel, 0);
     }
 }

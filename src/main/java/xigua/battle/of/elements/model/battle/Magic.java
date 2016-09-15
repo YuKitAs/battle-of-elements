@@ -1,26 +1,26 @@
 package xigua.battle.of.elements.model.battle;
 
 public class Magic {
-    public static final Magic EMPTY = new Magic(Type.RECOVER, Element.NONE, 0, 0);
+    public static final Magic EMPTY = new Magic(Element.NONE, Element.NONE, 0, 0);
 
-    private final Type type;
-    private final Element element;
+    private final Element effectElement;
+    private final Element typeElement;
     private final int primaryLevel;
     private final int secondaryLevel;
 
-    public Magic(Type type, Element element, int primaryLevel, int secondaryLevel) {
-        this.type = type;
-        this.element = element;
+    public Magic(Element effectElement, Element typeElement, int primaryLevel, int secondaryLevel) {
+        this.effectElement = effectElement;
+        this.typeElement = typeElement;
         this.primaryLevel = primaryLevel;
         this.secondaryLevel = secondaryLevel;
     }
 
-    public Type getType() {
-        return type;
+    public Element getEffectElement() {
+        return effectElement;
     }
 
-    public Element getElement() {
-        return element;
+    public Element getTypeElement() {
+        return typeElement;
     }
 
     public int getPrimaryLevel() {
@@ -29,9 +29,5 @@ public class Magic {
 
     public int getSecondaryLevel() {
         return secondaryLevel;
-    }
-
-    public enum Type {
-        ATTACK, DEFEND, RECOVER
     }
 }
