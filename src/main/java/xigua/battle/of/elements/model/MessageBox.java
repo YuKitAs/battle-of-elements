@@ -20,9 +20,15 @@ public class MessageBox {
         return messageQueueMap.get(reciever).peekMessage();
     }
 
-    private Message ensureKeyExists(Class<? extends GameState> reciever) {
+    public Message pollMessage(Class<? extends GameState> reciever) {
         ensureKeyExists(reciever);
         return messageQueueMap.get(reciever).pollMessage();
+    }
+
+    private void ensureKeyExists(Class<? extends GameState> reciever) {
+        if (!messageQueueMap.containsKey(reciever)) {
+            messageQueueMap.put(reciever, new MessageQueue());
+        }
     }
 
     private class MessageQueue {
