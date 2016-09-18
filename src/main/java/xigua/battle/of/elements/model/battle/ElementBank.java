@@ -1,6 +1,6 @@
 package xigua.battle.of.elements.model.battle;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ElementBank {
@@ -9,7 +9,7 @@ public abstract class ElementBank {
 
     ElementBank(int maxSize) {
         this.maxSize = maxSize;
-        this.elementList = new ArrayList<>();
+        this.elementList = new LinkedList<>();
     }
 
     public int getCurrentSize() {
@@ -26,6 +26,10 @@ public abstract class ElementBank {
         }
 
         elementList.add(element);
+    }
+
+    public Element remove(int index) {
+        return elementList.remove(index);
     }
 
     public void clear() {

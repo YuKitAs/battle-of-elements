@@ -7,6 +7,7 @@ import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MagicFactoryTest {
     private MagicFactory magicFactory;
@@ -19,11 +20,35 @@ public class MagicFactoryTest {
 
         elementBank.add(Element.FIRE);
         elementBank.add(Element.WATER);
+    }
+
+    @Test
+    public void buildWithTwoElements_ExceptionThrown() {
+        assertThatThrownBy(() -> magicFactory.buildFromSummonedElementBank(elementBank)).isInstanceOf
+                (RuntimeException.class).hasMessage("Too few elements for casting magic.");
+    }
+
+    @Test
+    public void buildWithWrongEndElement_ExceptionThrown() {
         elementBank.add(Element.WOOD);
+
+        assertThatThrownBy(() -> magicFactory.buildFromSummonedElementBank(elementBank)).isInstanceOf
+                (RuntimeException.class).hasMessage("Element bank is not ended properly.");
+    }
+
+    @Test
+    public void buildWithDuplicatedEndElement_ExceptionThrown() {
+        elementBank.add(Element.WATER);
+        elementBank.add(Element.WATER);
+
+        assertThatThrownBy(() -> magicFactory.buildFromSummonedElementBank(elementBank)).isInstanceOf
+                (RuntimeException.class).hasMessage("Invalid element bank for casting magic.");
     }
 
     @Test
     public void buildWithNoMoreThanThreeElements_ReturnEmptyMagic() {
+        elementBank.add(Element.WATER);
+
         Magic magic = magicFactory.buildFromSummonedElementBank(elementBank);
 
         assertThat(magic).isEqualTo(Magic.EMPTY);
@@ -31,7 +56,9 @@ public class MagicFactoryTest {
 
     @Test
     public void buildWithMoreThanThreeElements_ReturnCorrectMagic() {
+        elementBank.add(Element.WOOD);
         elementBank.add(Element.FIRE);
+        elementBank.add(Element.WATER);
 
         Magic magic = magicFactory.buildFromSummonedElementBank(elementBank);
 
