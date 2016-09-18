@@ -11,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MagicFactoryTest {
     private MagicFactory magicFactory;
     private SummonedElementBank elementBank;
-    private Magic magic;
 
     @Before
     public void setUp() {
@@ -24,17 +23,17 @@ public class MagicFactoryTest {
     }
 
     @Test
-    public void buildFromSummonedElementBank_WithNoMoreThanThreeElements() {
-        magic = magicFactory.buildFromSummonedElementBank(elementBank);
+    public void buildWithNoMoreThanThreeElements_ReturnEmptyMagic() {
+        Magic magic = magicFactory.buildFromSummonedElementBank(elementBank);
 
         assertThat(magic).isEqualTo(Magic.EMPTY);
     }
 
     @Test
-    public void buildFromSummonedElementBank_WithMoreThanThreeElements() {
+    public void buildWithMoreThanThreeElements_ReturnCorrectMagic() {
         elementBank.add(Element.FIRE);
 
-        magic = magicFactory.buildFromSummonedElementBank(elementBank);
+        Magic magic = magicFactory.buildFromSummonedElementBank(elementBank);
 
         assertThat(magic.getEffectElement()).isEqualTo(Element.FIRE);
         assertThat(magic.getTypeElement()).isEqualTo(Element.WATER);
@@ -45,7 +44,7 @@ public class MagicFactoryTest {
 
     @Test
     public void buildNonTypedMagic() {
-        magic = magicFactory.buildNonTypedMagic(Element.FIRE, 3);
+        Magic magic = magicFactory.buildNonTypedMagic(Element.FIRE, 3);
 
         assertThat(magic.getEffectElement()).isEqualTo(Element.FIRE);
         assertThat(magic.getTypeElement()).isEqualTo(Element.NONE);
