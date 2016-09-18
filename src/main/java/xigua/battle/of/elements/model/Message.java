@@ -1,6 +1,6 @@
 package xigua.battle.of.elements.model;
 
-import xigua.battle.of.elements.logic.GameState;
+import xigua.battle.of.elements.logic.statemachine.GameState;
 
 public class Message {
     private final Class<? extends GameState> sender;

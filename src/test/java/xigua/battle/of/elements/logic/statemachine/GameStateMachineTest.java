@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.logic;
+package xigua.battle.of.elements.logic.statemachine;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package xigua.battle.of.elements;
 
-import xigua.battle.of.elements.logic.GameStateFactory;
-import xigua.battle.of.elements.logic.GameStateMachine;
-import xigua.battle.of.elements.logic.WorldState;
+import xigua.battle.of.elements.logic.statemachine.GameStateFactory;
+import xigua.battle.of.elements.logic.statemachine.GameStateMachine;
+import xigua.battle.of.elements.logic.statemachine.WorldState;
 
 public class Main {
     public static void main(String[] args) throws InstantiationException, IllegalAccessException {

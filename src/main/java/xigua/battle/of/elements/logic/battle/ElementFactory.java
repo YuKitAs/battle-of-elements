@@ -1,38 +1,25 @@
 package xigua.battle.of.elements.logic.battle;
 
 import xigua.battle.of.elements.model.battle.Element;
+import xigua.battle.of.elements.model.battle.Environment;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Random;
 
-public class Environment {
-    private final Map<Element, Integer> elementProportions;
-    private final int totalProportion;
+public class ElementFactory {
+    private final List<Element> elementProportions;
+    private final Random random = new Random();
 
-    public Environment(Type type) {
-        elementProportions = type.getElementProportions();
-        totalProportion = elementProportions.values().stream().collect(Collectors.summingInt(Integer::intValue));
+    public ElementFactory(Environment environment) {
+        elementProportions = environment.getElementProportions();
+    }
+
+    public ElementFactory(Environment environment, long randomSeed) {
+        this(environment);
+        random.setSeed(randomSeed);
     }
 
     public Element getElement() {
-
-    }
-
-    public enum Type {
-        GRASSLAND(1, 1, 1), TOWN(1, 1, 1), LAKE(2, 3, 2), FOREST(2, 2, 3);
-
-        private final Map<Element, Integer> elementProportions = new HashMap<>();
-
-        Type(int... proportions) {
-            elementProportions.put(Element.FIRE, proportions[0]);
-            elementProportions.put(Element.WATER, proportions[1]);
-            elementProportions.put(Element.WOOD, proportions[2]);
-        }
-
-        private Map<Element, Integer> getElementProportions() {
-            return Collections.unmodifiableMap(elementProportions);
-        }
+        return elementProportions.get(random.nextInt(elementProportions.size()));
     }
 }

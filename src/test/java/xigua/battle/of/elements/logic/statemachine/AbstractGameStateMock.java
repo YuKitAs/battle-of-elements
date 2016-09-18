@@ -1,5 +1,6 @@
-package xigua.battle.of.elements.logic;
+package xigua.battle.of.elements.logic.statemachine;
 
+import xigua.battle.of.elements.logic.statemachine.GameState;
 import xigua.battle.of.elements.model.Message;
 
 import java.util.ArrayList;
