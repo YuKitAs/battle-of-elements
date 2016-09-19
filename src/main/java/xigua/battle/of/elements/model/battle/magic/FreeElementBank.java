@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle;
+package xigua.battle.of.elements.model.battle.magic;
 
 public class FreeElementBank extends ElementBank {
     public FreeElementBank(int maxSize) {

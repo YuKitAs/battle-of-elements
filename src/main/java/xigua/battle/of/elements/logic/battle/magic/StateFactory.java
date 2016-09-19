@@ -1,7 +1,7 @@
-package xigua.battle.of.elements.logic.battle;
+package xigua.battle.of.elements.logic.battle.magic;
 
-import xigua.battle.of.elements.model.battle.Magic;
-import xigua.battle.of.elements.model.battle.State;
+import xigua.battle.of.elements.model.battle.magic.Magic;
+import xigua.battle.of.elements.model.battle.magic.State;
 
 public class StateFactory {
     public State fromMagic(Magic magic) {

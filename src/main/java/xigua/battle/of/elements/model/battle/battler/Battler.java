@@ -1,6 +1,9 @@
-package xigua.battle.of.elements.model.battle;
+package xigua.battle.of.elements.model.battle.battler;
 
 import xigua.battle.of.elements.model.IntWithMax;
+import xigua.battle.of.elements.model.battle.magic.FreeElementBank;
+import xigua.battle.of.elements.model.battle.magic.State;
+import xigua.battle.of.elements.model.battle.magic.SummonedElementBank;
 
 import java.util.ArrayList;
 import java.util.List;

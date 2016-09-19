@@ -1,8 +1,8 @@
-package xigua.battle.of.elements.logic.battle;
+package xigua.battle.of.elements.logic.battle.magic;
 
-import xigua.battle.of.elements.model.battle.Element;
-import xigua.battle.of.elements.model.battle.Magic;
-import xigua.battle.of.elements.model.battle.SummonedElementBank;
+import xigua.battle.of.elements.model.battle.magic.Element;
+import xigua.battle.of.elements.model.battle.magic.Magic;
+import xigua.battle.of.elements.model.battle.magic.SummonedElementBank;
 
 public class MagicFactory {
     public Magic buildFromSummonedElementBank(SummonedElementBank summonedElementBank) {

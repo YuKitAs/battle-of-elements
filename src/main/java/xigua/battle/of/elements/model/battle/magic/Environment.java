@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle;
+package xigua.battle.of.elements.model.battle.magic;
 
 import java.util.ArrayList;
 import java.util.List;
