@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Battler {
+    private final String name;
+
     private final boolean isMagician;
+
     private final IntWithMax hitPoint;
     private final IntWithMax magicPoint;
 
@@ -14,21 +17,29 @@ public class Battler {
     private final int defence;
     private final int speed;
 
+    private final IntWithMax actionPoint;
+
     private final List<State> states;
     private final SummonedElementBank summonedElementBank;
     private final FreeElementBank freeElementBank;
 
-    private Battler(boolean isMagician, IntWithMax hitPoint, IntWithMax magicPoint, int attack, int defence, int
-            speed, int summonedElementBankSize, FreeElementBank freeElementBank) {
+    private Battler(String name, boolean isMagician, IntWithMax hitPoint, IntWithMax magicPoint, int attack, int
+            defence, int speed, int summonedElementBankSize, FreeElementBank freeElementBank) {
+        this.name = name;
         this.isMagician = isMagician;
         this.hitPoint = hitPoint;
         this.magicPoint = magicPoint;
         this.attack = attack;
         this.defence = defence;
         this.speed = speed;
+        this.actionPoint = new IntWithMax(0, 100);
         this.states = new ArrayList<>();
         this.summonedElementBank = new SummonedElementBank(summonedElementBankSize);
         this.freeElementBank = freeElementBank;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isMagician() {
@@ -55,6 +66,10 @@ public class Battler {
         return speed;
     }
 
+    public IntWithMax getActionPoint() {
+        return actionPoint;
+    }
+
     public List<State> getStates() {
         return states;
     }
@@ -68,6 +83,7 @@ public class Battler {
     }
 
     public static class Builder {
+        private String name = null;
         private Boolean isMagician = null;
         private IntWithMax hitPoint = null;
         private IntWithMax magicPoint = null;
@@ -78,6 +94,11 @@ public class Battler {
 
         private Integer summonedElementBankSize = null;
         private FreeElementBank freeElementBank = null;
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
 
         public Builder isMagician(boolean magician) {
             isMagician = magician;
@@ -120,13 +141,13 @@ public class Battler {
         }
 
         public Battler build() {
-            if (isMagician == null || hitPoint == null || magicPoint == null || attack == null || defence == null ||
-                    speed == null || summonedElementBankSize == null || freeElementBank == null) {
+            if (name == null || isMagician == null || hitPoint == null || magicPoint == null || attack == null ||
+                    defence == null || speed == null || summonedElementBankSize == null || freeElementBank == null) {
                 throw new NullPointerException("One or more attributes have null value.");
             }
 
-            return new Battler(isMagician, hitPoint, magicPoint, attack, defence, speed, summonedElementBankSize,
-                    freeElementBank);
+            return new Battler(name, isMagician, hitPoint, magicPoint, attack, defence, speed,
+                    summonedElementBankSize, freeElementBank);
         }
     }
 }
