@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 public class State {
     public static final State EMPTY = new State(Element.NONE, Element.NONE, 0);

@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 public enum Element {
     FIRE, WATER, WOOD, NONE;

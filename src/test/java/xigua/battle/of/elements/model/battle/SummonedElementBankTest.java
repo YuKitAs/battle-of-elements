@@ -2,8 +2,6 @@ package xigua.battle.of.elements.model.battle;
 
 import org.junit.Before;
 import org.junit.Test;
-import xigua.battle.of.elements.model.battle.magic.Element;
-import xigua.battle.of.elements.model.battle.magic.SummonedElementBank;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

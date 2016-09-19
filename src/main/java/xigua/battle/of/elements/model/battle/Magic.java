@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 public class Magic {
     public static final Magic EMPTY = new Magic(Element.NONE, Element.NONE, 0, 0);

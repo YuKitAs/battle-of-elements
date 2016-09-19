@@ -1,7 +1,7 @@
-package xigua.battle.of.elements.logic.battle.magic;
+package xigua.battle.of.elements.logic.battle;
 
-import xigua.battle.of.elements.model.battle.magic.Element;
-import xigua.battle.of.elements.model.battle.magic.Environment;
+import xigua.battle.of.elements.model.battle.Element;
+import xigua.battle.of.elements.model.battle.Environment;
 
 import java.util.List;
 import java.util.Random;

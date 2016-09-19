@@ -1,4 +1,4 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 public class SummonedElementBank extends ElementBank {
     public SummonedElementBank(int maxSize) {

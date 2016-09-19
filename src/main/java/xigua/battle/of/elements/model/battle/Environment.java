@@ -1,10 +1,11 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public enum Environment {
-    GRASSLAND(1, 1, 1), TOWN(1, 1, 1), LAKE(2, 3, 2), FOREST(2, 2, 3);
+    BALANCED(1, 1, 1), MORE_FIRE(3, 2, 2), MORE_WATER(2, 3, 2), MORE_WOOD(2, 2, 3), FIRE_DOMINANT(2, 1, 1),
+    WATER_DOMINANT(1, 2, 1), WOOD_DOMINANT(1, 1, 2);
 
     private final List<Element> elementProportions = new ArrayList<>();
 

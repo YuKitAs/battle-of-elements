@@ -1,6 +1,5 @@
 package xigua.battle.of.elements.logic.battle;
 
-import xigua.battle.of.elements.logic.battle.magic.ElementFactory;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.util.List;

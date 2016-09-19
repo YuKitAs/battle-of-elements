@@ -1,9 +1,7 @@
-package xigua.battle.of.elements.model.battle.magic;
+package xigua.battle.of.elements.model.battle;
 
 import org.junit.Before;
 import org.junit.Test;
-import xigua.battle.of.elements.model.battle.magic.Element;
-import xigua.battle.of.elements.model.battle.magic.ElementBank;
 
 import java.util.Collections;
 import java.util.List;
