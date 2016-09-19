@@ -2,92 +2,32 @@ package xigua.battle.of.elements.model.battle.battler;
 
 import xigua.battle.of.elements.model.IntWithMax;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
-import xigua.battle.of.elements.model.battle.State;
-import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
 
 public class Battler {
-    private final String name;
+    private final BasicFacts basicFacts;
+    private final InBattleStatus inBattleStatus;
 
-    private final boolean isMagician;
-
-    private final IntWithMax hitPoint;
-    private final IntWithMax magicPoint;
-
-    private final int attack;
-    private final int defence;
-    private final int speed;
-
-    private final IntWithMax actionPoint;
-
-    private final List<State> states;
-    private final SummonedElementBank summonedElementBank;
-    private final FreeElementBank freeElementBank;
-
-    private Battler(String name, boolean isMagician, IntWithMax hitPoint, IntWithMax magicPoint, int attack, int
-            defence, int speed, int summonedElementBankSize, FreeElementBank freeElementBank) {
-        this.name = name;
-        this.isMagician = isMagician;
-        this.hitPoint = hitPoint;
-        this.magicPoint = magicPoint;
-        this.attack = attack;
-        this.defence = defence;
-        this.speed = speed;
-        this.actionPoint = new IntWithMax(0, 100);
-        this.states = new ArrayList<>();
-        this.summonedElementBank = new SummonedElementBank(summonedElementBankSize);
-        this.freeElementBank = freeElementBank;
+    private Battler(BasicFacts basicFacts, InBattleStatus inBattleStatus) {
+        this.basicFacts = basicFacts;
+        this.inBattleStatus = inBattleStatus;
     }
 
-    public String getName() {
-        return name;
+    public BasicFacts getBasicFacts() {
+        return basicFacts;
     }
 
-    public boolean isMagician() {
-        return isMagician;
-    }
-
-    public IntWithMax getHitPoint() {
-        return hitPoint;
-    }
-
-    public IntWithMax getMagicPoint() {
-        return magicPoint;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getDefence() {
-        return defence;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public IntWithMax getActionPoint() {
-        return actionPoint;
-    }
-
-    public List<State> getStates() {
-        return states;
-    }
-
-    public SummonedElementBank getSummonedElementBank() {
-        return summonedElementBank;
-    }
-
-    public FreeElementBank getFreeElementBank() {
-        return freeElementBank;
+    public InBattleStatus getInBattleStatus() {
+        return inBattleStatus;
     }
 
     public static class Builder {
         private String name = null;
+        private Boolean isFriendly = null;
+
         private Boolean isMagician = null;
+
         private IntWithMax hitPoint = null;
         private IntWithMax magicPoint = null;
 
@@ -103,18 +43,23 @@ public class Battler {
             return this;
         }
 
+        public Builder isFriendly(boolean friendly) {
+            isFriendly = friendly;
+            return this;
+        }
+
         public Builder isMagician(boolean magician) {
             isMagician = magician;
             return this;
         }
 
-        public Builder withHitPoint(IntWithMax hitPoint) {
-            this.hitPoint = hitPoint;
+        public Builder withHitPoint(int current, int max) {
+            this.hitPoint = new IntWithMax(current, max);
             return this;
         }
 
-        public Builder withMagicPoint(IntWithMax magicPoint) {
-            this.magicPoint = magicPoint;
+        public Builder withMagicPoint(int current, int max) {
+            this.magicPoint = new IntWithMax(current, max);
             return this;
         }
 
@@ -133,7 +78,7 @@ public class Battler {
             return this;
         }
 
-        public Builder withSummonedElementBankSize(Integer summonedElementBankSize) {
+        public Builder withSummonedElementBankSize(int summonedElementBankSize) {
             this.summonedElementBankSize = summonedElementBankSize;
             return this;
         }
@@ -144,13 +89,25 @@ public class Battler {
         }
 
         public Battler build() {
-            if (name == null || isMagician == null || hitPoint == null || magicPoint == null || attack == null ||
-                    defence == null || speed == null || summonedElementBankSize == null || freeElementBank == null) {
-                throw new NullPointerException("One or more attributes have null value.");
-            }
+            verifyFields();
 
-            return new Battler(name, isMagician, hitPoint, magicPoint, attack, defence, speed,
-                    summonedElementBankSize, freeElementBank);
+            BasicFacts basicFacts = new BasicFacts(name, isFriendly, isMagician, attack, defence, speed);
+            InBattleStatus inBattleStatus = new InBattleStatus(hitPoint, magicPoint, summonedElementBankSize,
+                    freeElementBank);
+
+            return new Battler(basicFacts, inBattleStatus);
+        }
+
+        private void verifyFields() {
+            for (Field field : getClass().getDeclaredFields()) {
+                try {
+                    if (field.get(this) == null) {
+                        throw new NullPointerException(String.format("The field %s has no value.", field.getName()));
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Cannot verify fields.", e);
+                }
+            }
         }
     }
 }
