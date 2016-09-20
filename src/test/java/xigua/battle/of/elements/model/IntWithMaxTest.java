@@ -14,12 +14,12 @@ public class IntWithMaxTest {
     }
 
     @Test
-    public void getValue() {
+    public void getValue_WithCorrectValue() {
         assertThat(intWithMax.getValue()).isEqualTo(42);
     }
 
     @Test
-    public void setValue() {
+    public void setValue_CorrectValueSet() {
         intWithMax.setValue(100);
         assertThat(intWithMax.getValue()).isEqualTo(42);
 
@@ -28,7 +28,7 @@ public class IntWithMaxTest {
     }
 
     @Test
-    public void getMax() {
+    public void getMax_WithCorrectMax() {
         assertThat(intWithMax.getMax()).isEqualTo(42);
     }
 }
