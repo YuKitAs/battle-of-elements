@@ -19,10 +19,13 @@ public class IntWithMaxTest {
     }
 
     @Test
-    public void setValue_CorrectValueSet() {
+    public void setWhenValueBiggerThanMax_CorrectValueSet() {
         intWithMax.setValue(100);
         assertThat(intWithMax.getValue()).isEqualTo(42);
+    }
 
+    @Test
+    public void setWhenValueSmallerThanMax_CorrectValueSet() {
         intWithMax.setValue(1);
         assertThat(intWithMax.getValue()).isEqualTo(1);
     }

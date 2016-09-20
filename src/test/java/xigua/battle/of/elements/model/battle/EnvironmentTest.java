@@ -15,8 +15,9 @@ public class EnvironmentTest {
                 Element.WATER, Element.WOOD, Element.WOOD);
         List<Element> fireDominantElementProp = Arrays.asList(Element.FIRE, Element.FIRE, Element.WATER, Element.WOOD);
 
-        assertThat(Environment.BALANCED.getElementProportions()).isEqualTo(balancedElementProp);
-        assertThat(Environment.MORE_FIRE.getElementProportions()).isEqualTo(moreFireElementProp);
-        assertThat(Environment.FIRE_DOMINANT.getElementProportions()).isEqualTo(fireDominantElementProp);
+        assertThat(Environment.BALANCED.getElementProportions()).containsExactlyElementsOf(balancedElementProp);
+        assertThat(Environment.MORE_FIRE.getElementProportions()).containsExactlyElementsOf(moreFireElementProp);
+        assertThat(Environment.FIRE_DOMINANT.getElementProportions()).containsExactlyElementsOf
+                (fireDominantElementProp);
     }
 }
