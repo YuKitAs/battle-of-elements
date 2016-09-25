@@ -1,7 +1,11 @@
 package xigua.battle.of.elements.model.battle;
 
-public enum Element {
+import java.io.Serializable;
+
+public enum Element implements Serializable {
     FIRE, WATER, WOOD, NONE;
+
+    private static final long serialVersionUID = 1L;
 
     public Element getDestructedElement() {
         switch (this) {

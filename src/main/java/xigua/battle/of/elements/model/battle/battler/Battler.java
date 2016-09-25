@@ -1,16 +1,18 @@
 package xigua.battle.of.elements.model.battle.battler;
 
-import xigua.battle.of.elements.logic.battle.Controller;
 import xigua.battle.of.elements.model.IntWithMax;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
-import xigua.battle.of.elements.model.battle.State;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
+import xigua.battle.of.elements.model.battle.actions.Magic;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Battler {
+public class Battler implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     // Basic facts:
     private final String name;
     private final boolean isFriendly;
@@ -27,15 +29,12 @@ public class Battler {
     private final IntWithMax magicPoint;
     private final IntWithMax actionPoint = new IntWithMax(0, 100);
 
-    private final List<State> states;
+    private final List<Magic> states;
     private final SummonedElementBank summonedElementBank;
     private final FreeElementBank freeElementBank;
 
-    private final Controller controller;
-
     public Battler(String name, boolean isFriendly, boolean isMagician, int attack, int defence, int speed,
-            IntWithMax hitPoint, IntWithMax magicPoint, int summonedElementBankSize, FreeElementBank freeElementBank,
-            Controller controller) {
+            IntWithMax hitPoint, IntWithMax magicPoint, int summonedElementBankSize, FreeElementBank freeElementBank) {
         this.name = name;
         this.isFriendly = isFriendly;
         this.isMagician = isMagician;
@@ -49,8 +48,6 @@ public class Battler {
         this.states = new LinkedList<>();
         this.summonedElementBank = new SummonedElementBank(summonedElementBankSize);
         this.freeElementBank = freeElementBank;
-
-        this.controller = controller;
     }
 
     public String getName() {
@@ -97,7 +94,7 @@ public class Battler {
         return actionPoint;
     }
 
-    public List<State> getStates() {
+    public List<Magic> getStates() {
         return states;
     }
 
@@ -109,8 +106,19 @@ public class Battler {
         return freeElementBank;
     }
 
-    public Controller getController() {
-        return controller;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Battler)) return false;
+
+        Battler battler = (Battler) o;
+
+        return name.equals(battler.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     public static class Builder {
@@ -128,8 +136,6 @@ public class Battler {
 
         private Integer summonedElementBankSize = null;
         private FreeElementBank freeElementBank = null;
-
-        private Controller controller = null;
 
         public Builder withName(String name) {
             this.name = name;
@@ -181,16 +187,11 @@ public class Battler {
             return this;
         }
 
-        public Builder withController(Controller controller) {
-            this.controller = controller;
-            return this;
-        }
-
         public Battler build() {
             verifyFields();
 
             return new Battler(name, isFriendly, isMagician, attack, defence, speed, hitPoint, magicPoint,
-                    summonedElementBankSize, freeElementBank, controller);
+                    summonedElementBankSize, freeElementBank);
         }
 
         private void verifyFields() {

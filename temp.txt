@@ -1,0 +1,148 @@
+package xigua.battle.of.elements.logic.battle;
+
+import xigua.battle.of.elements.model.battle.BattleField;
+import xigua.battle.of.elements.model.battle.Element;
+import xigua.battle.of.elements.model.battle.FreeElementBank;
+import xigua.battle.of.elements.model.battle.battler.Battler;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ConsoleController implements Controller {
+    private static final String FMT_BATTLERS_ROUND = "现在是%s的回合：";
+    private static final String FMT_ELEMENTS_IN_BOTTLE = "元素瓶里有：%s。";
+    private static final String FMT_NEW_ELEMENTS = "新生成了：%s。";
+    private static final String FMT_CHOSE_ELEMENT = "召唤了%s。";
+
+    private static final String MSG_EMPTY_ELEMENT_BOTTLE = "元素瓶里面是空的。";
+    private static final String MSG_CHOOSE_ELEMENT = "输入要召唤的元素的数字：";
+    private static final String MSG_END_OF_ROUND = "===== 回合结束 =====";
+    private static final String MSG_ELEMENT_SOURCE_NEW = "[生成]";
+    private static final String MSG_ELEMENT_SOURCE_BOTTLE = "[瓶中]";
+    private static final String MSG_ALL_ELEMENTS_HEADER = "所有可召唤的元素：";
+    private static final String MSG_ELEMENT_NUM_ERROR = "输入的数字不对！";
+
+    @Override
+    public void control(Battler battler, List<Element> newElements, BattleField battleField) {
+        printMessageWithLeadingEmptyLine(String.format(FMT_BATTLERS_ROUND, battler.getName()));
+
+        printNewElements(newElements);
+        printFreeElementBank(battler.getFreeElementBank());
+
+        Element element = getSummonedElement(newElements, battler.getFreeElementBank());
+
+        printMessageWithLeadingEmptyLine(String.format(FMT_CHOSE_ELEMENT, getElementPrintName(element)));
+
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        printMessageWithLeadingEmptyLine(MSG_END_OF_ROUND);
+    }
+
+    private void printNewElements(List<Element> newElements) {
+        printMessageWithLeadingEmptyLine(String.format(FMT_NEW_ELEMENTS, String.join("，", getElementListString
+                (newElements))));
+    }
+
+    private void printFreeElementBank(FreeElementBank freeElementBank) {
+        if (freeElementBank.getCurrentSize() == 0) {
+            System.out.println(MSG_EMPTY_ELEMENT_BOTTLE);
+            return;
+        }
+        System.out.println(String.format(FMT_ELEMENTS_IN_BOTTLE, String.join("，", getElementListString
+                (freeElementBank.toList()))));
+    }
+
+    private Element getSummonedElement(List<Element> newElements, FreeElementBank freeElementBank) {
+        List<String> elementChoices = generateElementChoicesForSummon(newElements, freeElementBank);
+
+        int choice = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            printMessageWithLeadingEmptyLine(MSG_ALL_ELEMENTS_HEADER);
+
+            printStringList(elementChoices, 2);
+
+            System.out.print(MSG_CHOOSE_ELEMENT);
+
+            try {
+                choice = Integer.parseInt(br.readLine());
+            } catch (IOException | NumberFormatException e) {
+                choice = 0;
+            }
+
+            if (choice <= 0 || choice > elementChoices.size()) {
+                printMessageWithLeadingEmptyLine(MSG_ELEMENT_NUM_ERROR);
+                continue;
+            }
+
+            break;
+        }
+
+        int index = choice - 1;
+
+        Element chosenElement;
+        if (index < newElements.size()) {
+            chosenElement = newElements.get(index);
+            newElements.remove(index);
+        } else {
+            chosenElement = freeElementBank.toDistinctList().get(index - newElements.size());
+            freeElementBank.deleteElement(chosenElement);
+        }
+
+        return chosenElement;
+    }
+
+    private List<String> generateElementChoicesForSummon(List<Element> newElements, FreeElementBank freeElementBank) {
+        List<String> elementChoices = new ArrayList<>();
+        elementChoices.addAll(getElementListString(newElements));
+        elementChoices.addAll(getElementListString(freeElementBank.toDistinctList()));
+
+        for (int i = 0; i < elementChoices.size(); i++) {
+            elementChoices.set(i, String.format("%2d. %s %s", i + 1, elementChoices.get(i), (i < newElements.size() ?
+                    MSG_ELEMENT_SOURCE_NEW : MSG_ELEMENT_SOURCE_BOTTLE)));
+        }
+
+        return elementChoices;
+    }
+
+    private void printStringList(List<String> stringList, int rows) {
+        for (int i = 0; i < stringList.size(); i++) {
+            if (i % rows != rows - 1) {
+                System.out.print(stringList.get(i) + "    ");
+            } else {
+                System.out.println(stringList.get(i));
+            }
+        }
+    }
+
+    private void printMessageWithLeadingEmptyLine(String message) {
+        System.out.println();
+        System.out.println(message);
+    }
+
+    private List<String> getElementListString(List<Element> elements) {
+        return elements.stream().map(this::getElementPrintName).collect(Collectors.toList());
+    }
+
+    private String getElementPrintName(Element element) {
+        switch (element) {
+            case FIRE:
+                return "火之元素";
+            case WATER:
+                return "水之元素";
+            case WOOD:
+                return "木之元素";
+            default:
+                return "";
+        }
+    }
+}
