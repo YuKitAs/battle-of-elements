@@ -2,27 +2,27 @@ package xigua.battle.of.elements.utility;
 
 import java.io.Serializable;
 
-public class DummySerializable implements Serializable {
+class DummySerializable implements Serializable {
     private int id;
-    private SerializableChild child;
+    private InnerValue innerValue;
 
-    public DummySerializable(int id, int childId) {
+    DummySerializable(int id, int childId) {
         this.id = id;
-        child = new SerializableChild(childId);
+        innerValue = new InnerValue(childId);
     }
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
-    public SerializableChild getChild() {
-        return child;
+    InnerValue getInnerValue() {
+        return innerValue;
     }
 
-    class SerializableChild implements Serializable {
+    static class InnerValue implements Serializable {
         private int id;
 
-        SerializableChild(int id) {
+        InnerValue(int id) {
             this.id = id;
         }
 

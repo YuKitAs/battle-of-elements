@@ -11,7 +11,7 @@ public class DeepCopyTest {
         DummySerializable deepCopiedObject = DeepCopy.copy(serializableObject);
 
         assertThat(serializableObject.getId()).isEqualTo(deepCopiedObject.getId());
-        assertThat(serializableObject.getChild().getId()).isEqualTo(deepCopiedObject.getChild().getId());
+        assertThat(serializableObject.getInnerValue().getId()).isEqualTo(deepCopiedObject.getInnerValue().getId());
 
         assertThat(serializableObject == deepCopiedObject).isFalse();
     }
