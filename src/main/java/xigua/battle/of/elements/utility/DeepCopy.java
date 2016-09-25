@@ -7,10 +7,11 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class DeepCopy {
     @SuppressWarnings("unchecked")
-    public static <T> T copy(T object) {
+    public static <T extends Serializable> T copy(T object) {
         byte[] objectBytes;
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
