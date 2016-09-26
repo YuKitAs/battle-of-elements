@@ -2,11 +2,11 @@ package xigua.battle.of.elements.utility;
 
 import java.io.Serializable;
 
-class DummySerializable implements Serializable {
+public class DummySerializable implements Serializable {
     private int id;
     private InnerValue innerValue;
 
-    DummySerializable(int id, int childId) {
+    public DummySerializable(int id, int childId) {
         this.id = id;
         innerValue = new InnerValue(childId);
     }
