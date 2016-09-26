@@ -10,24 +10,30 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class DeepCopy {
-    @SuppressWarnings("unchecked")
-    public static <T extends Serializable> T copy(T object) {
-        byte[] objectBytes;
 
+    public static <T extends Serializable> T copy(T object) {
+        byte[] objectBytes = toBytes(object);
+        return fromBytes(objectBytes);
+    }
+
+    public static byte[] toBytes(Object object) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (ObjectOutput objectOutput = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutput.writeObject(object);
             objectOutput.flush();
-            objectBytes = byteArrayOutputStream.toByteArray();
+            return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot deep copy object.");
+            throw new RuntimeException("Cannot serialize object.");
         }
+    }
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(objectBytes);
+    @SuppressWarnings("unchecked")
+    public static <T extends Serializable> T fromBytes(byte[] bytes) {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         try (ObjectInput objectInput = new ObjectInputStream(byteArrayInputStream)) {
             return (T) objectInput.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("Cannot deep copy object.");
+            throw new RuntimeException("Cannot deserialize object.");
         }
     }
 }
