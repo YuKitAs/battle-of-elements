@@ -1,11 +1,11 @@
 package xigua.battle.of.elements.model.battle;
 
+import xigua.battle.of.elements.model.Event;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,7 @@ public class BattleField implements Serializable {
     private final Set<Battler> battlers = new HashSet<>();
     private final Environment environment;
 
-    public BattleField(List<Battler> battlers, Environment environment) {
+    public BattleField(Set<Battler> battlers, Environment environment) {
         battlers.forEach(this::addBattler);
         this.environment = environment;
     }

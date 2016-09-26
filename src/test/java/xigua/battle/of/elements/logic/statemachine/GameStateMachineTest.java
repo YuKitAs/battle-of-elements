@@ -43,8 +43,12 @@ public class GameStateMachineTest {
         Message expectedMessage1 = new Message(GameStateMock2.class, GameStateMock1.class, MESSAGE_TITLE, MESSAGE_BODY);
         Message expectedMessage2 = new Message(GameStateMock1.class, GameStateMock2.class, MESSAGE_TITLE, MESSAGE_BODY);
 
-        assertThat(gameStateMock1.getMessageReceived()).isNotEmpty().containsExactly(null, expectedMessage1);
-        assertThat(gameStateMock2.getMessageReceived()).isNotEmpty().containsExactly(expectedMessage2,
-                expectedMessage2);
+        assertThat(gameStateMock1.getMessageReceived()).hasSize(2);
+        assertThat(gameStateMock1.getMessageReceived().get(0)).isNull();
+        assertThat(gameStateMock1.getMessageReceived().get(1)).isEqualToComparingFieldByField(expectedMessage1);
+
+        assertThat(gameStateMock2.getMessageReceived()).hasSize(2);
+        assertThat(gameStateMock2.getMessageReceived().get(0)).isEqualToComparingFieldByField(expectedMessage2);
+        assertThat(gameStateMock2.getMessageReceived().get(1)).isEqualToComparingFieldByField(expectedMessage2);
     }
 }

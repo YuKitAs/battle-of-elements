@@ -124,9 +124,9 @@ public class ConsoleController implements Controller {
         }
     }
 
-    private void printMessageWithLeadingEmptyLine(String message) {
+    private void printMessageWithLeadingEmptyLine(String content) {
         System.out.println();
-        System.out.println(message);
+        System.out.println(content);
     }
 
     private List<String> getElementListString(List<Element> elements) {

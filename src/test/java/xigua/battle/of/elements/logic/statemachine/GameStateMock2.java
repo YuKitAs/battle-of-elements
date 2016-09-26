@@ -12,7 +12,7 @@ public class GameStateMock2 extends AbstractGameStateMock {
 
         Message receivedMessage = messageBox.pollMessage(this.getClass());
         Message mewMessage = new Message(this.getClass(), GameStateMock1.class, receivedMessage.getTitle(),
-                receivedMessage.getMessage());
+                receivedMessage.getContent());
         messageBox.sendMessage(mewMessage);
         messageReceived.add(receivedMessage);
 

@@ -1,6 +1,4 @@
-package xigua.battle.of.elements.model.battle.actions;
-
-import xigua.battle.of.elements.model.battle.Element;
+package xigua.battle.of.elements.model.battle;
 
 import java.io.Serializable;
 

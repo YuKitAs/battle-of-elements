@@ -1,9 +1,11 @@
 package xigua.battle.of.elements.model.battle.battler;
 
+import xigua.battle.of.elements.logic.battle.BattlerController;
+import xigua.battle.of.elements.logic.battle.BattlerObserver;
 import xigua.battle.of.elements.model.IntWithMax;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
-import xigua.battle.of.elements.model.battle.actions.Magic;
+import xigua.battle.of.elements.model.battle.Magic;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -33,8 +35,12 @@ public class Battler implements Serializable {
     private final SummonedElementBank summonedElementBank;
     private final FreeElementBank freeElementBank;
 
+    private final BattlerController controller;
+    private final BattlerObserver observer;
+
     public Battler(String name, boolean isFriendly, boolean isMagician, int attack, int defence, int speed,
-            IntWithMax hitPoint, IntWithMax magicPoint, int summonedElementBankSize, FreeElementBank freeElementBank) {
+            IntWithMax hitPoint, IntWithMax magicPoint, int summonedElementBankSize, FreeElementBank freeElementBank,
+            BattlerController controller, BattlerObserver observer) {
         this.name = name;
         this.isFriendly = isFriendly;
         this.isMagician = isMagician;
@@ -48,6 +54,12 @@ public class Battler implements Serializable {
         this.states = new LinkedList<>();
         this.summonedElementBank = new SummonedElementBank(summonedElementBankSize);
         this.freeElementBank = freeElementBank;
+
+        this.controller = controller;
+        controller.setBattler(this);
+        
+        this.observer = observer;
+        observer.setBattler(this);
     }
 
     public String getName() {
@@ -106,6 +118,14 @@ public class Battler implements Serializable {
         return freeElementBank;
     }
 
+    public BattlerController getController() {
+        return controller;
+    }
+
+    public BattlerObserver getObserver() {
+        return observer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,6 +156,9 @@ public class Battler implements Serializable {
 
         private Integer summonedElementBankSize = null;
         private FreeElementBank freeElementBank = null;
+
+        private BattlerController controller = null;
+        private BattlerObserver observer = null;
 
         public Builder withName(String name) {
             this.name = name;
@@ -187,11 +210,21 @@ public class Battler implements Serializable {
             return this;
         }
 
+        public Builder withController(BattlerController controller) {
+            this.controller = controller;
+            return this;
+        }
+
+        public Builder withObserver(BattlerObserver observer) {
+            this.observer = observer;
+            return this;
+        }
+
         public Battler build() {
             verifyFields();
 
             return new Battler(name, isFriendly, isMagician, attack, defence, speed, hitPoint, magicPoint,
-                    summonedElementBankSize, freeElementBank);
+                    summonedElementBankSize, freeElementBank, controller, observer);
         }
 
         private void verifyFields() {

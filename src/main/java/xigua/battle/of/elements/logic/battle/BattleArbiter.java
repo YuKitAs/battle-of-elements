@@ -1,61 +1,41 @@
 package xigua.battle.of.elements.logic.battle;
 
-import xigua.battle.of.elements.logic.battle.actions.Action;
-import xigua.battle.of.elements.logic.battle.actions.MagicBuilder;
+import xigua.battle.of.elements.model.Choices;
+import xigua.battle.of.elements.model.ChoicesPurpose;
+import xigua.battle.of.elements.model.Event;
+import xigua.battle.of.elements.model.EventType;
+import xigua.battle.of.elements.model.battle.Action;
 import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Environment;
 import xigua.battle.of.elements.model.battle.battler.Battler;
-import xigua.battle.of.elements.utility.DeepCopy;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BattleArbiter {
     private final BattleField battleField;
-    private final ElementFactory elementFactory;
-    private final Map<Battler, BattlerController> battlerControllerMap = new HashMap<>();
-    private final Map<Battler, BattlerObserver> battlerObserverMap = new HashMap<>();
-    private final MagicBuilder magicBuilder;
+    private final BattleHelper battleHelper;
 
-    public BattleArbiter(Environment environment, List<Battler> battlers) {
+    public BattleArbiter(Environment environment, Set<Battler> battlers) {
         battleField = new BattleField(battlers, environment);
-        elementFactory = new ElementFactory(environment);
-        magicBuilder = new MagicBuilder();
-    }
-
-    public void addBattlerController(Battler battler, BattlerController battlerController) {
-        battlerControllerMap.put(battler, battlerController);
-    }
-
-    public void addBattlerObserver(Battler battler, BattlerObserver battlerObserver) {
-        battlerObserverMap.put(battler, battlerObserver);
+        battleHelper = new BattleHelper(battleField);
     }
 
     public void start() {
-        battlerObserverMap.entrySet().forEach(entry -> entry.getValue().notifyBattleStarted(entry.getKey(),
-                battleField));
+        battleHelper.notifyAllBattlers(buildBattleStartEvent(battleField));
 
         while (!battleField.friendTeamWins() && !battleField.enemyTeamWins()) {
             List<Battler> actionCandidates = updateActionPoint();
             sortActionCandidates(actionCandidates);
+
             actionCandidates.forEach(battler -> {
-                if (battlerObserverMap.containsKey(battler)) {
-                    battlerObserverMap.get(battler).notifyRoundStarted(DeepCopy.copy(battler), DeepCopy.copy
-                            (battleField));
-                }
-
-                processRound(battler);
-
-                if (battlerObserverMap.containsKey(battler)) {
-                    battlerObserverMap.get(battler).notifyRoundEnded(DeepCopy.copy(battler), DeepCopy.copy
-                            (battleField));
-                }
+                battleHelper.notifyAllBattlers(buildActionStartEvent(battleField, battler));
+                processAction(battler);
+                battleHelper.notifyAllBattlers(buildActionEndEvent(battleField, battler));
             });
         }
     }
@@ -73,40 +53,58 @@ public class BattleArbiter {
         return actionCandidates;
     }
 
+    private int getUpdatedActionPoint(Battler battler) {
+        return battler.getActionPoint().getValue() + battler.getSpeed();
+    }
+
     private void sortActionCandidates(List<Battler> actionCandidates) {
         Collections.sort(actionCandidates, Comparator.comparingDouble((Battler battler) -> (double) battler
                 .getActionPoint().getValue() / (double) battler.getSpeed()).reversed());
     }
 
-    private void processRound(Battler battler) {
-        BattlerController battlerController = battlerControllerMap.get(battler);
-
-        Action action = battlerController.chooseAction(getActionChoices(battler));
+    private void processAction(Battler battler) {
+        Choices choices = battler.getController().choose(buildActionChoices(battler));
+        Action action = Action.valueOf(choices.getChoices().get(choices.getChosenIndex()));
 
         switch (action) {
             case SUMMON_ELEMENT:
-                processSummonElementAction(battler, battlerController);
+                break;
+            case ABSORB_ELEMENT:
                 break;
             case PHYSICAL_ATTACK:
-            case ABSORB_ELEMENT:
+                break;
             default:
-                // Currently do nothing.
+                throw new RuntimeException("Unknown action type.");
         }
     }
 
-    private void processSummonElementAction(Battler battler, BattlerController battlerController) {
-
+    private Event buildBattleStartEvent(BattleField battleField) {
+        Event result = new Event(EventType.BATTLE_START);
+        result.putAttribute("battleField", battleField);
+        return result;
     }
 
-    private Set<Action> getActionChoices(Battler battler) {
+    private Event buildActionStartEvent(BattleField battleField, Battler battlerInTurn) {
+        Event result = new Event(EventType.BATTLE_ACTION_START);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        return result;
+    }
+
+    private Event buildActionEndEvent(BattleField battleField, Battler battlerInTurn) {
+        Event result = new Event(EventType.BATTLE_ACTION_END);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        return result;
+    }
+
+    private Choices buildActionChoices(Battler battler) {
         if (battler.isMagician()) {
-            return Stream.of(Action.SUMMON_ELEMENT, Action.ABSORB_ELEMENT).collect(Collectors.toSet());
+            return new Choices(ChoicesPurpose.BATTLE_ACTION, Arrays.asList( //
+                    Action.SUMMON_ELEMENT.name(), //
+                    Action.ABSORB_ELEMENT.name()));
         } else {
-            return Collections.singleton(Action.PHYSICAL_ATTACK);
+            return new Choices(ChoicesPurpose.BATTLE_ACTION, Collections.singletonList(Action.PHYSICAL_ATTACK.name()));
         }
-    }
-
-    private int getUpdatedActionPoint(Battler battler) {
-        return battler.getActionPoint().getValue() + battler.getSpeed();
     }
 }

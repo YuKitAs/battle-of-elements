@@ -1,9 +1,9 @@
-package xigua.battle.of.elements.logic.battle.actions;
+package xigua.battle.of.elements.logic.battle;
 
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
-import xigua.battle.of.elements.model.battle.actions.ElementUsage;
-import xigua.battle.of.elements.model.battle.actions.Magic;
+import xigua.battle.of.elements.model.battle.ElementUsage;
+import xigua.battle.of.elements.model.battle.Magic;
 
 public class MagicBuilder {
     public Magic fromSummonedElementBank(SummonedElementBank summonedElementBank) {
@@ -22,7 +22,7 @@ public class MagicBuilder {
         Element usageElement = summonedElementBank.getFirst();
         Element typeElement = summonedElementBank.getSecond();
 
-        return new Magic(CommonRules.getElementUsage(usageElement), typeElement, summonedElementBank
+        return new Magic(BattleHelper.getElementUsage(usageElement), typeElement, summonedElementBank
                 .getElementLevelCount(usageElement), summonedElementBank.getElementLevelCount(usageElement
                 .getDestructedElement()));
     }

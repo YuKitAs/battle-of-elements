@@ -1,11 +1,12 @@
-package xigua.battle.of.elements.logic.battle.actions;
+package xigua.battle.of.elements.logic.battle;
 
 import org.junit.Before;
 import org.junit.Test;
+import xigua.battle.of.elements.logic.battle.MagicBuilder;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
-import xigua.battle.of.elements.model.battle.actions.ElementUsage;
-import xigua.battle.of.elements.model.battle.actions.Magic;
+import xigua.battle.of.elements.model.battle.ElementUsage;
+import xigua.battle.of.elements.model.battle.Magic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
