@@ -3,9 +3,7 @@ package xigua.battle.of.elements.logic.battle.processors;
 import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
-abstract class MagicEffectProcessor {
-    protected abstract void process(Magic magic, Battler caster, Battler victim);
-
+final class MagicEffectHelper {
     protected static MagicEffectProcessor getAttackProcessor() {
         return (magic, attacker, defender) -> {
         };
@@ -19,5 +17,9 @@ abstract class MagicEffectProcessor {
     protected static MagicEffectProcessor getHealProcessor() {
         return (magic, healer, patient) -> {
         };
+    }
+
+    protected interface MagicEffectProcessor {
+        void process(Magic magic, Battler caster, Battler target);
     }
 }

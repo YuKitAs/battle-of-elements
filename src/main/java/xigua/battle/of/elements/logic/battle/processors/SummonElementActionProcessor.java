@@ -3,6 +3,7 @@ package xigua.battle.of.elements.logic.battle.processors;
 import xigua.battle.of.elements.logic.battle.BattleHelper;
 import xigua.battle.of.elements.logic.battle.ElementFactory;
 import xigua.battle.of.elements.logic.battle.MagicBuilder;
+import xigua.battle.of.elements.logic.battle.processors.MagicEffectHelper.MagicEffectProcessor;
 import xigua.battle.of.elements.model.Choices;
 import xigua.battle.of.elements.model.ChoicesPurpose;
 import xigua.battle.of.elements.model.Event;
@@ -14,6 +15,7 @@ import xigua.battle.of.elements.model.battle.battler.Battler;
 import xigua.battle.of.elements.utility.DeepCopy;
 
 import java.util.List;
+import java.util.Set;
 
 public class SummonElementActionProcessor {
 
@@ -52,42 +54,43 @@ public class SummonElementActionProcessor {
 
         switch (magic.getUsage()) {
             case ATTACK:
-                processAttackingMagic(magic);
+                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+                        .BATTLE_ATTACK_TARGET_CHOSEN), MagicEffectHelper.getAttackProcessor(), AfterMagicEventBuilder
+                        .with(EventType.BATTLE_AFTER_ATTACK));
                 break;
             case DEFEND:
-                processDefendingMagic();
+                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+                        .BATTLE_DEFEND_TARGET_CHOSEN), MagicEffectHelper.getDefendProcessor(), AfterMagicEventBuilder
+                        .with(EventType.BATTLE_AFTER_DEFEND));
                 break;
             case HEAL:
-                processHealingMagic();
+                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+                        .BATTLE_HEAL_TARGET_CHOSEN), MagicEffectHelper.getHealProcessor(), AfterMagicEventBuilder
+                        .with(EventType.BATTLE_AFTER_HEAL));
                 break;
             default:
                 throw new RuntimeException("Cannot process magic usage.");
         }
     }
 
-    private void processAttackingMagic(Magic magic) {
-        Choices targetSelectionChoices = TargetSelectionHelper.buildTargetSelectionChoices(battleField.getEnemiesFor
-                (battler));
+    private void processMagic(Magic magic, Set<Battler> targets, MagicTargetChosenEventBuilder
+            magicTargetChosenEventBuilder, MagicEffectProcessor processor, AfterMagicEventBuilder
+            afterMagicEventBuilder) {
+        Choices targetSelectionChoices = TargetSelectionHelper.buildTargetSelectionChoices(targets);
 
         Choices targetSelectionResult = battler.getController().choose(targetSelectionChoices);
 
         Battler target = battleField.getBattler(targetSelectionResult.getChosenItem());
 
-        BattleHelper.notifyAllBattlers(battleField, buildTargetForAttackChosenEvent(battleField, battler, target));
+        BattleHelper.notifyAllBattlers(battleField, magicTargetChosenEventBuilder.build(battleField, battler, target));
 
-        Battler battlerBeforeAttack = DeepCopy.copy(battler);
-        Battler targetBeforeAttack = DeepCopy.copy(target);
+        Battler battlerBefore = DeepCopy.copy(battler);
+        Battler targetBefore = DeepCopy.copy(target);
 
-        AttackHelper.processAttack(magic, battler, target);
+        processor.process(magic, battler, target);
 
-        BattleHelper.notifyAllBattlers(battleField, buildAfterAttackEvent(battleField, battler, battlerBeforeAttack,
-                target, targetBeforeAttack));
-    }
-
-    private void processDefendingMagic() {
-    }
-
-    private void processHealingMagic() {
+        BattleHelper.notifyAllBattlers(battleField, afterMagicEventBuilder.build(battleField, battler, battlerBefore,
+                target, targetBefore));
     }
 
     private Event buildElementSummonedEvent(BattleField battleField, Battler battlerInTurn, Element summonedElement) {
@@ -106,22 +109,34 @@ public class SummonElementActionProcessor {
         return result;
     }
 
-    private Event buildTargetForAttackChosenEvent(BattleField battleField, Battler battlerInTurn, Battler target) {
-        Event result = new Event(EventType.BATTLE_TARGET_FOR_ATTACK_CHOSEN);
-        result.putAttribute("battleField", battleField);
-        result.putAttribute("battlerInTurn", battlerInTurn);
-        result.putAttribute("target", target);
-        return result;
+    private interface MagicTargetChosenEventBuilder {
+        Event build(BattleField battleField, Battler battlerInTurn, Battler target);
+
+        static MagicTargetChosenEventBuilder with(EventType type) {
+            return (battleField, battlerInTurn, target) -> {
+                Event result = new Event(type);
+                result.putAttribute("battleField", battleField);
+                result.putAttribute("battlerInTurn", battlerInTurn);
+                result.putAttribute("target", target);
+                return result;
+            };
+        }
     }
 
-    private Event buildAfterAttackEvent(BattleField battleField, Battler battlerInTurn, Battler battlerBeforeAttack,
-            Battler target, Battler targetBeforeAttack) {
-        Event result = new Event(EventType.BATTLE_AFTER_ATTACK);
-        result.putAttribute("battleField", battleField);
-        result.putAttribute("battlerInTurn", battlerInTurn);
-        result.putAttribute("battlerBeforeAttack", battlerBeforeAttack);
-        result.putAttribute("target", target);
-        result.putAttribute("targetBeforeAttack", targetBeforeAttack);
-        return result;
+    private interface AfterMagicEventBuilder {
+        Event build(BattleField battleField, Battler battlerInTurn, Battler battlerBeforeAttack, Battler target,
+                Battler targetBeforeAttack);
+
+        static AfterMagicEventBuilder with(EventType type) {
+            return (battleField, battlerInTurn, battlerBeforeAttack, target, targetBeforeAttack) -> {
+                Event result = new Event(type);
+                result.putAttribute("battleField", battleField);
+                result.putAttribute("battlerInTurn", battlerInTurn);
+                result.putAttribute("battlerBefore", battlerBeforeAttack);
+                result.putAttribute("target", target);
+                result.putAttribute("targetBefore", targetBeforeAttack);
+                return result;
+            };
+        }
     }
 }

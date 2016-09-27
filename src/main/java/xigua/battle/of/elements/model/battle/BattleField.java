@@ -39,6 +39,11 @@ public class BattleField implements Serializable {
         return (int) getLiveBattlers().stream().filter(Battler::isFriendly).count();
     }
 
+    public Set<Battler> getFriendsFor(Battler battler) {
+        return getLiveBattlers().stream().filter(possibleEnemy -> possibleEnemy.isFriendly() == battler.isFriendly())
+                .collect(Collectors.toSet());
+    }
+
     public Set<Battler> getEnemiesFor(Battler battler) {
         return getLiveBattlers().stream().filter(possibleEnemy -> possibleEnemy.isFriendly() != battler.isFriendly())
                 .collect(Collectors.toSet());
