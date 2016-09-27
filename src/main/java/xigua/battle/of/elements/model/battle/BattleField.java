@@ -31,12 +31,12 @@ public class BattleField implements Serializable {
         return battlers.stream().filter(battler -> !battler.isDead()).collect(Collectors.toSet());
     }
 
-    public int getFriendTeamBattlerNumber() {
-        return (int) getLiveBattlers().stream().filter(battler -> !battler.isFriendly()).count();
+    public int getFriendlyBattlerNumber() {
+        return (int) getLiveBattlers().stream().filter(Battler::isFriendly).count();
     }
 
-    public int getEnemyTeamBattlerNumber() {
-        return (int) getLiveBattlers().stream().filter(Battler::isFriendly).count();
+    public int getEnemyBattlerNumber() {
+        return (int) getLiveBattlers().stream().filter(battler -> !battler.isFriendly()).count();
     }
 
     public Set<Battler> getFriendsFor(Battler battler) {

@@ -25,8 +25,6 @@ public class Battler implements Serializable {
     private final int speed;
 
     // In battle status:
-    private boolean isDead = false;
-
     private final IntWithMax hitPoint;
     private final IntWithMax actionPoint = new IntWithMax(0, 100);
 
@@ -85,11 +83,7 @@ public class Battler implements Serializable {
     }
 
     public boolean isDead() {
-        return isDead;
-    }
-
-    public void setDead(boolean dead) {
-        isDead = dead;
+        return hitPoint.getValue() <= 0;
     }
 
     public IntWithMax getHitPoint() {

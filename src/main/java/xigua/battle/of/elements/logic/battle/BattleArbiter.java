@@ -31,7 +31,7 @@ public class BattleArbiter {
     public void start() {
         BattleHelper.notifyAllBattlers(battleField, buildBattleStartedEvent(battleField));
 
-        while (battleField.getFriendTeamBattlerNumber() != 0 && battleField.getEnemyTeamBattlerNumber() != 0) {
+        while (battleField.getFriendlyBattlerNumber() != 0 && battleField.getEnemyBattlerNumber() != 0) {
             List<Battler> actionCandidates = updateActionPoint();
             sortActionCandidates(actionCandidates);
 
