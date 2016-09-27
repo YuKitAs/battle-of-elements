@@ -34,12 +34,11 @@ public class BattleHelperTest {
                 5, new FreeElementBank(5), new BattlerControllerMock(), battlerObserverMock));
 
         BattleField battleField = new BattleField(battlers, Environment.BALANCED);
-        BattleHelper battleHelper = new BattleHelper(battleField);
 
-        battleHelper.notifyAllBattlers(new Event(EventType.BATTLE_ACTION_START));
-        battleHelper.notifyAllBattlers(new Event(EventType.BATTLE_ACTION_END));
+        BattleHelper.notifyAllBattlers(battleField, new Event(EventType.BATTLE_ACTION_STARTED));
+        BattleHelper.notifyAllBattlers(battleField, new Event(EventType.BATTLE_ACTION_ENDED));
 
-        assertThat(battlerObserverMock.getEventReceived().get(0).getType()).isEqualTo(EventType.BATTLE_ACTION_START);
-        assertThat(battlerObserverMock.getEventReceived().get(1).getType()).isEqualTo(EventType.BATTLE_ACTION_END);
+        assertThat(battlerObserverMock.getEventReceived().get(0).getType()).isEqualTo(EventType.BATTLE_ACTION_STARTED);
+        assertThat(battlerObserverMock.getEventReceived().get(1).getType()).isEqualTo(EventType.BATTLE_ACTION_ENDED);
     }
 }

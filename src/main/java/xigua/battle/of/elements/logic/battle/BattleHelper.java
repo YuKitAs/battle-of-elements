@@ -5,14 +5,8 @@ import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.ElementUsage;
 
-public class BattleHelper {
-    private final BattleField battleField;
-
-    public BattleHelper(BattleField battleField) {
-        this.battleField = battleField;
-    }
-
-    public void notifyAllBattlers(Event event) {
+public final class BattleHelper {
+    public static void notifyAllBattlers(BattleField battleField, Event event) {
         battleField.getAllBattlers().forEach(battler -> battler.getObserver().notify(event));
     }
 

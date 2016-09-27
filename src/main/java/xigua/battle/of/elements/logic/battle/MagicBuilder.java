@@ -1,12 +1,12 @@
 package xigua.battle.of.elements.logic.battle;
 
 import xigua.battle.of.elements.model.battle.Element;
-import xigua.battle.of.elements.model.battle.SummonedElementBank;
 import xigua.battle.of.elements.model.battle.ElementUsage;
 import xigua.battle.of.elements.model.battle.Magic;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
-public class MagicBuilder {
-    public Magic fromSummonedElementBank(SummonedElementBank summonedElementBank) {
+public final class MagicBuilder {
+    public static Magic fromSummonedElementBank(SummonedElementBank summonedElementBank) {
         // Magic must have at least 4 elements:
         //   1. magic type: attack, defend, heal;
         //   2. main element: fire, water, wood;
@@ -27,11 +27,11 @@ public class MagicBuilder {
                 .getDestructedElement()));
     }
 
-    public Magic physicalAttackMagic(int primaryLevel) {
+    public static Magic physicalAttackMagic(int primaryLevel) {
         return new Magic(ElementUsage.ATTACK, Element.NONE, primaryLevel, 0);
     }
 
-    private boolean verifyElementBank(SummonedElementBank summonedElementBank) {
+    private static boolean verifyElementBank(SummonedElementBank summonedElementBank) {
         int currentSize = summonedElementBank.getCurrentSize();
         Element usageElement = summonedElementBank.getFirst();
 

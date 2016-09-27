@@ -16,11 +16,11 @@ public class EventTest {
     public void putAndGetAttribute_WithCorrectAttribute() {
         DummySerializable obj = new DummySerializable(ID, INNER_VALUE);
 
-        Event event = new Event(EventType.BATTLE_START);
+        Event event = new Event(EventType.BATTLE_STARTED);
         event.putAttribute(ATTRIBUTE_KEY, obj);
         DummySerializable deserialized = (DummySerializable) event.getAttribute(ATTRIBUTE_KEY);
 
-        assertThat(event.getType()).isEqualTo(EventType.BATTLE_START);
+        assertThat(event.getType()).isEqualTo(EventType.BATTLE_STARTED);
 
         assertThat(deserialized.getId()).isEqualTo(ID);
         assertThat(deserialized.getInnerValue().getId()).isEqualTo(INNER_VALUE);

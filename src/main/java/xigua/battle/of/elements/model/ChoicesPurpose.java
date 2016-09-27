@@ -1,5 +1,5 @@
 package xigua.battle.of.elements.model;
 
 public enum ChoicesPurpose {
-    BATTLE_ACTION
+    BATTLE_SUMMON_ELEMENT, BATTLE_ACTION
 }

@@ -2,21 +2,18 @@ package xigua.battle.of.elements.logic.battle;
 
 import org.junit.Before;
 import org.junit.Test;
-import xigua.battle.of.elements.logic.battle.MagicBuilder;
 import xigua.battle.of.elements.model.battle.Element;
-import xigua.battle.of.elements.model.battle.SummonedElementBank;
 import xigua.battle.of.elements.model.battle.ElementUsage;
 import xigua.battle.of.elements.model.battle.Magic;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MagicBuilderTest {
-    private MagicBuilder magicBuilder;
     private SummonedElementBank elementBank;
 
     @Before
     public void setUp() {
-        magicBuilder = new MagicBuilder();
         elementBank = new SummonedElementBank(5);
 
         elementBank.add(Element.FIRE);
@@ -25,14 +22,14 @@ public class MagicBuilderTest {
 
     @Test
     public void buildWithTwoElements_EmptyMagic() {
-        assertThat(magicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
     public void buildWithWrongEndElement_EmptyMagic() {
         elementBank.add(Element.WOOD);
 
-        assertThat(magicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
@@ -40,14 +37,14 @@ public class MagicBuilderTest {
         elementBank.add(Element.WATER);
         elementBank.add(Element.WATER);
 
-        assertThat(magicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
     public void buildWithNoMoreThanThreeElements_EmptyMagic() {
         elementBank.add(Element.WATER);
 
-        assertThat(magicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
@@ -56,7 +53,7 @@ public class MagicBuilderTest {
         elementBank.add(Element.FIRE);
         elementBank.add(Element.WATER);
 
-        Magic magic = magicBuilder.fromSummonedElementBank(elementBank);
+        Magic magic = MagicBuilder.fromSummonedElementBank(elementBank);
 
         assertThat(magic.getUsage()).isEqualTo(ElementUsage.ATTACK);
         assertThat(magic.getType()).isEqualTo(Element.WATER);
@@ -67,7 +64,7 @@ public class MagicBuilderTest {
 
     @Test
     public void buildPhysicalAttackMagic_ReturnCorrectMagic() {
-        Magic magic = magicBuilder.physicalAttackMagic(3);
+        Magic magic = MagicBuilder.physicalAttackMagic(3);
 
         assertThat(magic.getUsage()).isEqualTo(ElementUsage.ATTACK);
         assertThat(magic.getType()).isEqualTo(Element.NONE);

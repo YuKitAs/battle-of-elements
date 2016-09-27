@@ -1,5 +1,8 @@
 package xigua.battle.of.elements.logic.battle;
 
+import xigua.battle.of.elements.logic.battle.processors.AbsorbElementActionProcessor;
+import xigua.battle.of.elements.logic.battle.processors.PhysicalAttackActionProcessor;
+import xigua.battle.of.elements.logic.battle.processors.SummonElementActionProcessor;
 import xigua.battle.of.elements.model.Choices;
 import xigua.battle.of.elements.model.ChoicesPurpose;
 import xigua.battle.of.elements.model.Event;
@@ -18,24 +21,24 @@ import java.util.stream.Collectors;
 
 public class BattleArbiter {
     private final BattleField battleField;
-    private final BattleHelper battleHelper;
+    private final ElementFactory elementFactory;
 
     public BattleArbiter(Environment environment, Set<Battler> battlers) {
         battleField = new BattleField(battlers, environment);
-        battleHelper = new BattleHelper(battleField);
+        elementFactory = new ElementFactory(environment);
     }
 
     public void start() {
-        battleHelper.notifyAllBattlers(buildBattleStartEvent(battleField));
+        BattleHelper.notifyAllBattlers(battleField, buildBattleStartedEvent(battleField));
 
         while (!battleField.friendTeamWins() && !battleField.enemyTeamWins()) {
             List<Battler> actionCandidates = updateActionPoint();
             sortActionCandidates(actionCandidates);
 
             actionCandidates.forEach(battler -> {
-                battleHelper.notifyAllBattlers(buildActionStartEvent(battleField, battler));
+                BattleHelper.notifyAllBattlers(battleField, buildActionStartedEvent(battleField, battler));
                 processAction(battler);
-                battleHelper.notifyAllBattlers(buildActionEndEvent(battleField, battler));
+                BattleHelper.notifyAllBattlers(battleField, buildActionEndedEvent(battleField, battler));
             });
         }
     }
@@ -68,31 +71,34 @@ public class BattleArbiter {
 
         switch (action) {
             case SUMMON_ELEMENT:
+                new SummonElementActionProcessor(battler, battleField, elementFactory).process();
                 break;
             case ABSORB_ELEMENT:
+                new AbsorbElementActionProcessor(battler, battleField, elementFactory).process();
                 break;
             case PHYSICAL_ATTACK:
+                new PhysicalAttackActionProcessor(battler, battleField).process();
                 break;
             default:
                 throw new RuntimeException("Unknown action type.");
         }
     }
 
-    private Event buildBattleStartEvent(BattleField battleField) {
-        Event result = new Event(EventType.BATTLE_START);
+    private Event buildBattleStartedEvent(BattleField battleField) {
+        Event result = new Event(EventType.BATTLE_STARTED);
         result.putAttribute("battleField", battleField);
         return result;
     }
 
-    private Event buildActionStartEvent(BattleField battleField, Battler battlerInTurn) {
-        Event result = new Event(EventType.BATTLE_ACTION_START);
+    private Event buildActionStartedEvent(BattleField battleField, Battler battlerInTurn) {
+        Event result = new Event(EventType.BATTLE_ACTION_STARTED);
         result.putAttribute("battleField", battleField);
         result.putAttribute("battlerInTurn", battlerInTurn);
         return result;
     }
 
-    private Event buildActionEndEvent(BattleField battleField, Battler battlerInTurn) {
-        Event result = new Event(EventType.BATTLE_ACTION_END);
+    private Event buildActionEndedEvent(BattleField battleField, Battler battlerInTurn) {
+        Event result = new Event(EventType.BATTLE_ACTION_ENDED);
         result.putAttribute("battleField", battleField);
         result.putAttribute("battlerInTurn", battlerInTurn);
         return result;
