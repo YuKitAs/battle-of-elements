@@ -3,7 +3,6 @@ package xigua.battle.of.elements.logic.battle;
 import org.junit.Test;
 import xigua.battle.of.elements.model.Event;
 import xigua.battle.of.elements.model.EventType;
-import xigua.battle.of.elements.model.IntWithMax;
 import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.ElementUsage;
@@ -30,8 +29,12 @@ public class BattleHelperTest {
         BattlerObserverMock battlerObserverMock = new BattlerObserverMock();
 
         Set<Battler> battlers = new HashSet<>();
-        battlers.add(new Battler("John Doe", true, true, 10, 10, 10, new IntWithMax(10, 20), new IntWithMax(10, 20),
-                5, new FreeElementBank(5), new BattlerControllerMock(), battlerObserverMock));
+        Battler battler = new Battler.Builder().withName("John Doe").isFriendly(true).isMagician(true).withAttack(10)
+                .withDefence(10).withSpeed(10).withHitPoint(10, 10).withMagicPoint(10, 10)
+                .withSummonedElementBankSize(5).withFreeElementBank(new FreeElementBank(5)).withController(new
+                        BattlerControllerMock()).withObserver(battlerObserverMock).build();
+
+        battlers.add(battler);
 
         BattleField battleField = new BattleField(battlers, Environment.BALANCED);
 
