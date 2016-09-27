@@ -13,10 +13,10 @@ public class BattleState implements GameState {
     public Class<? extends GameState> run(GameState lastState, MessageBox messageBox) {
         Battler battler1 = new Battler.Builder().withName("Foo").isFriendly(true).isMagician(true).withAttack(10)
                 .withDefence(10).withFreeElementBank(new FreeElementBank(10)).withSummonedElementBankSize(6)
-                .withHitPoint(100, 100).withMagicPoint(100, 100).withSpeed(10).build();
+                .withHitPoint(100, 100).withSpeed(10).build();
         Battler battler2 = new Battler.Builder().withName("Bar").isFriendly(false).isMagician(true).withAttack(10)
                 .withDefence(10).withFreeElementBank(new FreeElementBank(10)).withSummonedElementBankSize(6)
-                .withHitPoint(100, 100).withMagicPoint(100, 100).withSpeed(10).build();
+                .withHitPoint(100, 100).withSpeed(10).build();
 
         Map<Battler, BattlerController> battlerControllerMap = new HashMap<>();
         //battlerControllerMap.put(battler1, new ConsoleBattlerController());

@@ -1,6 +1,6 @@
 package xigua.battle.of.elements.logic.battle;
 
-import xigua.battle.of.elements.logic.battle.processors.AbsorbElementActionProcessor;
+import xigua.battle.of.elements.logic.battle.processors.EscapeFromBattleActionProcessor;
 import xigua.battle.of.elements.logic.battle.processors.PhysicalAttackActionProcessor;
 import xigua.battle.of.elements.logic.battle.processors.SummonElementActionProcessor;
 import xigua.battle.of.elements.model.Choices;
@@ -31,7 +31,7 @@ public class BattleArbiter {
     public void start() {
         BattleHelper.notifyAllBattlers(battleField, buildBattleStartedEvent(battleField));
 
-        while (!battleField.friendTeamWins() && !battleField.enemyTeamWins()) {
+        while (battleField.getFriendTeamBattlerNumber() != 0 && battleField.getEnemyTeamBattlerNumber() != 0) {
             List<Battler> actionCandidates = updateActionPoint();
             sortActionCandidates(actionCandidates);
 
@@ -73,11 +73,11 @@ public class BattleArbiter {
             case SUMMON_ELEMENT:
                 new SummonElementActionProcessor(battler, battleField, elementFactory).process();
                 break;
-            case ABSORB_ELEMENT:
-                new AbsorbElementActionProcessor(battler, battleField, elementFactory).process();
-                break;
             case PHYSICAL_ATTACK:
                 new PhysicalAttackActionProcessor(battler, battleField).process();
+                break;
+            case ESCAPE_FROM_BATTLE:
+                new EscapeFromBattleActionProcessor(battler, battleField).process();
                 break;
             default:
                 throw new RuntimeException("Unknown action type.");
@@ -106,11 +106,11 @@ public class BattleArbiter {
 
     private Choices buildActionChoices(Battler battler) {
         if (battler.isMagician()) {
-            return new Choices(ChoicesPurpose.BATTLE_ACTION, Arrays.asList( //
-                    Action.SUMMON_ELEMENT.name(), //
-                    Action.ABSORB_ELEMENT.name()));
+            return new Choices(ChoicesPurpose.BATTLE_ACTION, Arrays.asList(Action.SUMMON_ELEMENT.name(), Action
+                    .ESCAPE_FROM_BATTLE.name()));
         } else {
-            return new Choices(ChoicesPurpose.BATTLE_ACTION, Collections.singletonList(Action.PHYSICAL_ATTACK.name()));
+            return new Choices(ChoicesPurpose.BATTLE_ACTION, Arrays.asList(Action.PHYSICAL_ATTACK.name(), Action
+                    .ESCAPE_FROM_BATTLE.name()));
         }
     }
 }

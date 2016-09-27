@@ -30,9 +30,9 @@ public class BattleHelperTest {
 
         Set<Battler> battlers = new HashSet<>();
         Battler battler = new Battler.Builder().withName("John Doe").isFriendly(true).isMagician(true).withAttack(10)
-                .withDefence(10).withSpeed(10).withHitPoint(10, 10).withMagicPoint(10, 10)
-                .withSummonedElementBankSize(5).withFreeElementBank(new FreeElementBank(5)).withController(new
-                        BattlerControllerMock()).withObserver(battlerObserverMock).build();
+                .withDefence(10).withSpeed(10).withHitPoint(10, 10).withSummonedElementBankSize(5)
+                .withFreeElementBank(new FreeElementBank(5)).withController(new BattlerControllerMock()).withObserver
+                        (battlerObserverMock).build();
 
         battlers.add(battler);
 
@@ -41,7 +41,7 @@ public class BattleHelperTest {
         BattleHelper.notifyAllBattlers(battleField, new Event(EventType.BATTLE_ACTION_STARTED));
         BattleHelper.notifyAllBattlers(battleField, new Event(EventType.BATTLE_ACTION_ENDED));
 
-        assertThat(battlerObserverMock.getEventReceived().get(0).getType()).isEqualTo(EventType.BATTLE_ACTION_STARTED);
-        assertThat(battlerObserverMock.getEventReceived().get(1).getType()).isEqualTo(EventType.BATTLE_ACTION_ENDED);
+        assertThat(battlerObserverMock.getEventReceived()).extracting(Event::getType).containsExactly(EventType
+                .BATTLE_ACTION_STARTED, EventType.BATTLE_ACTION_ENDED);
     }
 }

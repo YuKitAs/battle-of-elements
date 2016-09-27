@@ -11,6 +11,7 @@ import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.battler.Battler;
+import xigua.battle.of.elements.utility.DeepCopy;
 
 import java.util.List;
 
@@ -49,7 +50,44 @@ public class SummonElementActionProcessor {
             return;
         }
 
+        switch (magic.getUsage()) {
+            case ATTACK:
+                processAttackingMagic(magic);
+                break;
+            case DEFEND:
+                processDefendingMagic();
+                break;
+            case HEAL:
+                processHealingMagic();
+                break;
+            default:
+                throw new RuntimeException("Cannot process magic usage.");
+        }
+    }
 
+    private void processAttackingMagic(Magic magic) {
+        Choices targetSelectionChoices = TargetSelectionHelper.buildTargetSelectionChoices(battleField.getEnemiesFor
+                (battler));
+
+        Choices targetSelectionResult = battler.getController().choose(targetSelectionChoices);
+
+        Battler target = battleField.getBattler(targetSelectionResult.getChosenItem());
+
+        BattleHelper.notifyAllBattlers(battleField, buildTargetForAttackChosenEvent(battleField, battler, target));
+
+        Battler battlerBeforeAttack = DeepCopy.copy(battler);
+        Battler targetBeforeAttack = DeepCopy.copy(target);
+
+        AttackHelper.processAttack(magic, battler, target);
+
+        BattleHelper.notifyAllBattlers(battleField, buildAfterAttackEvent(battleField, battler, battlerBeforeAttack,
+                target, targetBeforeAttack));
+    }
+
+    private void processDefendingMagic() {
+    }
+
+    private void processHealingMagic() {
     }
 
     private Event buildElementSummonedEvent(BattleField battleField, Battler battlerInTurn, Element summonedElement) {
@@ -61,10 +99,29 @@ public class SummonElementActionProcessor {
     }
 
     private Event buildMagicCastedEvent(BattleField battleField, Battler battlerInTurn, Magic magicCasted) {
-        Event result = new Event(EventType.BATTLE_ELEMENT_SUMMONED);
+        Event result = new Event(EventType.BATTLE_MAGIC_CASTED);
         result.putAttribute("battleField", battleField);
         result.putAttribute("battlerInTurn", battlerInTurn);
         result.putAttribute("magicCasted", magicCasted);
+        return result;
+    }
+
+    private Event buildTargetForAttackChosenEvent(BattleField battleField, Battler battlerInTurn, Battler target) {
+        Event result = new Event(EventType.BATTLE_TARGET_FOR_ATTACK_CHOSEN);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        result.putAttribute("target", target);
+        return result;
+    }
+
+    private Event buildAfterAttackEvent(BattleField battleField, Battler battlerInTurn, Battler battlerBeforeAttack,
+            Battler target, Battler targetBeforeAttack) {
+        Event result = new Event(EventType.BATTLE_AFTER_ATTACK);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        result.putAttribute("battlerBeforeAttack", battlerBeforeAttack);
+        result.putAttribute("target", target);
+        result.putAttribute("targetBeforeAttack", targetBeforeAttack);
         return result;
     }
 }

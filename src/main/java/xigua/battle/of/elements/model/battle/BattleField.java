@@ -1,6 +1,5 @@
 package xigua.battle.of.elements.model.battle;
 
-import xigua.battle.of.elements.model.Event;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.io.Serializable;
@@ -32,12 +31,12 @@ public class BattleField implements Serializable {
         return battlers.stream().filter(battler -> !battler.isDead()).collect(Collectors.toSet());
     }
 
-    public boolean friendTeamWins() {
-        return getLiveBattlers().stream().filter(battler -> !battler.isFriendly()).count() == 0L;
+    public int getFriendTeamBattlerNumber() {
+        return (int) getLiveBattlers().stream().filter(battler -> !battler.isFriendly()).count();
     }
 
-    public boolean enemyTeamWins() {
-        return getLiveBattlers().stream().filter(Battler::isFriendly).count() == 0L;
+    public int getEnemyTeamBattlerNumber() {
+        return (int) getLiveBattlers().stream().filter(Battler::isFriendly).count();
     }
 
     public Set<Battler> getEnemiesFor(Battler battler) {

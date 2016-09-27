@@ -4,8 +4,8 @@ import xigua.battle.of.elements.logic.battle.BattlerController;
 import xigua.battle.of.elements.logic.battle.BattlerObserver;
 import xigua.battle.of.elements.model.IntWithMax;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
-import xigua.battle.of.elements.model.battle.SummonedElementBank;
 import xigua.battle.of.elements.model.battle.Magic;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -28,7 +28,6 @@ public class Battler implements Serializable {
     private boolean isDead = false;
 
     private final IntWithMax hitPoint;
-    private final IntWithMax magicPoint;
     private final IntWithMax actionPoint = new IntWithMax(0, 100);
 
     private final List<Magic> states;
@@ -39,8 +38,8 @@ public class Battler implements Serializable {
     private final BattlerObserver observer;
 
     public Battler(String name, boolean isFriendly, boolean isMagician, int attack, int defence, int speed,
-            IntWithMax hitPoint, IntWithMax magicPoint, int summonedElementBankSize, FreeElementBank freeElementBank,
-            BattlerController controller, BattlerObserver observer) {
+            IntWithMax hitPoint, int summonedElementBankSize, FreeElementBank freeElementBank, BattlerController
+            controller, BattlerObserver observer) {
         this.name = name;
         this.isFriendly = isFriendly;
         this.isMagician = isMagician;
@@ -49,7 +48,6 @@ public class Battler implements Serializable {
         this.speed = speed;
 
         this.hitPoint = hitPoint;
-        this.magicPoint = magicPoint;
 
         this.states = new LinkedList<>();
         this.summonedElementBank = new SummonedElementBank(summonedElementBankSize);
@@ -57,7 +55,7 @@ public class Battler implements Serializable {
 
         this.controller = controller;
         controller.setBattler(this);
-        
+
         this.observer = observer;
         observer.setBattler(this);
     }
@@ -96,10 +94,6 @@ public class Battler implements Serializable {
 
     public IntWithMax getHitPoint() {
         return hitPoint;
-    }
-
-    public IntWithMax getMagicPoint() {
-        return magicPoint;
     }
 
     public IntWithMax getActionPoint() {
@@ -148,7 +142,6 @@ public class Battler implements Serializable {
         private Boolean isMagician = null;
 
         private IntWithMax hitPoint = null;
-        private IntWithMax magicPoint = null;
 
         private Integer attack = null;
         private Integer defence = null;
@@ -177,11 +170,6 @@ public class Battler implements Serializable {
 
         public Builder withHitPoint(int current, int max) {
             this.hitPoint = new IntWithMax(current, max);
-            return this;
-        }
-
-        public Builder withMagicPoint(int current, int max) {
-            this.magicPoint = new IntWithMax(current, max);
             return this;
         }
 
@@ -223,7 +211,7 @@ public class Battler implements Serializable {
         public Battler build() {
             verifyFields();
 
-            return new Battler(name, isFriendly, isMagician, attack, defence, speed, hitPoint, magicPoint,
+            return new Battler(name, isFriendly, isMagician, attack, defence, speed, hitPoint,
                     summonedElementBankSize, freeElementBank, controller, observer);
         }
 
