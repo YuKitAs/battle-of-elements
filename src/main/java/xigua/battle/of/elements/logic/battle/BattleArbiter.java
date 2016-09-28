@@ -44,12 +44,11 @@ public class BattleArbiter {
     }
 
     private List<Battler> updateActionPoint() {
-        List<Battler> actionCandidates = battleField.getLiveBattlers().stream().filter(battler ->
-                getUpdatedActionPoint(battler) >= battler.getActionPoint().getMax()).collect(Collectors.toList());
+        List<Battler> actionCandidates = battleField.getLiveBattlers().stream().filter(battler -> getUpdatedActionPoint(battler) >= battler.getActionPoint().getMaxValue()).collect(Collectors.toList());
 
         battleField.getLiveBattlers().forEach(battler -> {
             int actionPoint = getUpdatedActionPoint(battler);
-            actionPoint %= battler.getActionPoint().getMax();
+            actionPoint %= battler.getActionPoint().getMaxValue();
             battler.getActionPoint().setValue(actionPoint);
         });
 
