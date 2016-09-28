@@ -22,6 +22,10 @@ public class Choices {
     }
 
     public void choose(int chosenIndex) {
+        if (chosenIndex >= choices.size() || chosenIndex < 0) {
+            throw new IndexOutOfBoundsException("Chosen index must be within the range of 0 to " + choices.size());
+        }
+
         this.chosenIndex = chosenIndex;
     }
 
