@@ -1,8 +1,6 @@
-package xigua.battle.of.elements.model.battle;
+package xigua.battle.of.elements.model;
 
 import org.junit.Test;
-import xigua.battle.of.elements.model.Event;
-import xigua.battle.of.elements.model.EventType;
 import xigua.battle.of.elements.utility.DummySerializable;
 
 import static org.assertj.core.api.Assertions.assertThat;

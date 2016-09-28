@@ -1,6 +1,5 @@
 package xigua.battle.of.elements.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

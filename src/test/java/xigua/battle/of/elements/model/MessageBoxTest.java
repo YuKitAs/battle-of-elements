@@ -21,7 +21,7 @@ public class MessageBoxTest {
     }
 
     @Test
-    public void sendAndPoll_WithCorrectMessage() {
+    public void sendAndPeek_WithCorrectMessage() {
         messageBox.sendMessage(message);
 
         assertThat(messageBox.peekMessage(message.getReceiver())).isEqualTo(message);
