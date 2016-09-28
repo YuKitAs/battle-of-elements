@@ -7,14 +7,6 @@ import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 public final class MagicBuilder {
     public static Magic fromSummonedElementBank(SummonedElementBank summonedElementBank) {
-        // Magic must have at least 4 elements:
-        //   1. magic type: attack, defend, heal;
-        //   2. main element: fire, water, wood;
-        //   3. magic level: primary element (same as magic type) count, secondary element (destructed by magic type)
-        //      count;
-        //   4. end of the magic: destruct magic type.
-        // eg. [FIRE, WATER, FIRE, FIRE, WOOD, WATER] is an attack magic with element WATER, primary level is 2,
-        // secondary level is 1.
         if (!verifyElementBank(summonedElementBank)) {
             return Magic.EMPTY;
         }
@@ -43,11 +35,7 @@ public final class MagicBuilder {
             return false;
         }
 
-        if (summonedElementBank.getElementLevelCount(usageElement) + summonedElementBank.getElementLevelCount(
-                (usageElement.getDestructedElement())) + 3 != currentSize) {
-            return false;
-        }
-
-        return true;
+        return summonedElementBank.getElementLevelCount(usageElement) + summonedElementBank.getElementLevelCount(
+                (usageElement.getDestructedElement())) + 3 == currentSize;
     }
 }
