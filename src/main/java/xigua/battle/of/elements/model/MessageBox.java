@@ -11,23 +11,23 @@ public class MessageBox {
     private final Map<Class<? extends GameState>, MessageQueue> messageQueueMap = new HashMap<>();
 
     public void sendMessage(Message message) {
-        ensureKeyExists(message.getReciever());
-        messageQueueMap.get(message.getReciever()).putMessage(message);
+        ensureKeyExists(message.getReceiver());
+        messageQueueMap.get(message.getReceiver()).putMessage(message);
     }
 
-    public Message peekMessage(Class<? extends GameState> reciever) {
-        ensureKeyExists(reciever);
-        return messageQueueMap.get(reciever).peekMessage();
+    public Message peekMessage(Class<? extends GameState> receiver) {
+        ensureKeyExists(receiver);
+        return messageQueueMap.get(receiver).peekMessage();
     }
 
-    public Message pollMessage(Class<? extends GameState> reciever) {
-        ensureKeyExists(reciever);
-        return messageQueueMap.get(reciever).pollMessage();
+    public Message pollMessage(Class<? extends GameState> receiver) {
+        ensureKeyExists(receiver);
+        return messageQueueMap.get(receiver).pollMessage();
     }
 
-    private void ensureKeyExists(Class<? extends GameState> reciever) {
-        if (!messageQueueMap.containsKey(reciever)) {
-            messageQueueMap.put(reciever, new MessageQueue());
+    private void ensureKeyExists(Class<? extends GameState> receiver) {
+        if (!messageQueueMap.containsKey(receiver)) {
+            messageQueueMap.put(receiver, new MessageQueue());
         }
     }
 
