@@ -1,18 +1,19 @@
 package xigua.battle.of.elements.model;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class IntWithMax {
-    private final int max;
+    private final int maxValue;
     private int value;
 
-    public IntWithMax(int max) {
-        this(max, max);
+    public IntWithMax(int maxValue) {
+        this(maxValue, maxValue);
     }
 
-    public IntWithMax(int value, int max) {
+    public IntWithMax(int value, int maxValue) {
         this.value = value;
-        this.max = max;
+        this.maxValue = maxValue;
     }
 
     public int getValue() {
@@ -20,10 +21,10 @@ public class IntWithMax {
     }
 
     public void setValue(int value) {
-        this.value = min(value, max);
+        this.value = max(0, min(value, maxValue));
     }
 
-    public int getMax() {
-        return max;
+    public int getMaxValue() {
+        return maxValue;
     }
 }

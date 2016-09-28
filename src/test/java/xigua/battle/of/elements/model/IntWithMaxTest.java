@@ -32,6 +32,6 @@ public class IntWithMaxTest {
 
     @Test
     public void getMax_WithCorrectMax() {
-        assertThat(intWithMax.getMax()).isEqualTo(42);
+        assertThat(intWithMax.getMaxValue()).isEqualTo(42);
     }
 }

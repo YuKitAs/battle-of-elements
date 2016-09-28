@@ -9,8 +9,6 @@ public enum Element implements Serializable {
 
     public Element getDestructedElement() {
         switch (this) {
-            case NONE:
-                return NONE;
             case FIRE:
                 return WOOD;
             case WATER:
@@ -18,14 +16,12 @@ public enum Element implements Serializable {
             case WOOD:
                 return WATER;
             default:
-                throw new RuntimeException("No such element.");
+                return NONE;
         }
     }
 
     public Element getConstructedElement() {
         switch (this) {
-            case NONE:
-                return NONE;
             case FIRE:
                 return WATER;
             case WATER:
@@ -33,7 +29,7 @@ public enum Element implements Serializable {
             case WOOD:
                 return FIRE;
             default:
-                throw new RuntimeException("No such element.");
+                return NONE;
         }
     }
 }

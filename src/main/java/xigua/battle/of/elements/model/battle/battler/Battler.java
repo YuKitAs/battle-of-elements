@@ -21,8 +21,11 @@ public class Battler implements Serializable {
     private final boolean isMagician;
 
     private final int attack;
+    private final Modifier attackModifier = new Modifier();
     private final int defence;
+    private final Modifier defenceModifier = new Modifier();
     private final int speed;
+    private final Modifier speedModifier = new Modifier();
 
     // In battle status:
     private final IntWithMax hitPoint;
@@ -71,15 +74,27 @@ public class Battler implements Serializable {
     }
 
     public int getAttack() {
-        return attack;
+        return (int) Math.round((double) attack * attackModifier.getModifierFactor());
     }
 
     public int getDefence() {
-        return defence;
+        return (int) Math.round((double) defence * defenceModifier.getModifierFactor());
     }
 
     public int getSpeed() {
-        return speed;
+        return (int) Math.round((double) speed * speedModifier.getModifierFactor());
+    }
+
+    public Modifier getAttackModifier() {
+        return attackModifier;
+    }
+
+    public Modifier getDefenceModifier() {
+        return defenceModifier;
+    }
+
+    public Modifier getSpeedModifier() {
+        return speedModifier;
     }
 
     public boolean isDead() {
