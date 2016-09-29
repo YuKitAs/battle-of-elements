@@ -14,57 +14,55 @@ public class MagicBuilderTest {
 
     @Before
     public void setUp() {
-        elementBank = new SummonedElementBank(5);
+        elementBank = new SummonedElementBank(7);
 
         elementBank.add(Element.FIRE);
         elementBank.add(Element.WATER);
-    }
-
-    @Test
-    public void buildWithTwoElements_EmptyMagic() {
-        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
-    }
-
-    @Test
-    public void buildWithWrongEndElement_EmptyMagic() {
-        elementBank.add(Element.WOOD);
-
-        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
-    }
-
-    @Test
-    public void buildWithDuplicatedEndElement_EmptyMagic() {
-        elementBank.add(Element.WATER);
-        elementBank.add(Element.WATER);
-
-        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
     public void buildWithNoMoreThanThreeElements_EmptyMagic() {
-        elementBank.add(Element.WATER);
+        elementBank.add(Element.WOOD);
 
-        assertThat(MagicBuilder.fromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+    }
+
+    @Test
+    public void buildWithWrongEndElement_EmptyMagic() {
+        elementBank.add(Element.FIRE);
+        elementBank.add(Element.FIRE);
+
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+    }
+
+    @Test
+    public void buildWithDuplicatedEndElement_EmptyMagic() {
+        elementBank.add(Element.WOOD);
+        elementBank.add(Element.WOOD);
+
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
     }
 
     @Test
     public void buildWithMoreThanThreeElements_ReturnCorrectMagic() {
-        elementBank.add(Element.WOOD);
         elementBank.add(Element.FIRE);
         elementBank.add(Element.WATER);
+        elementBank.add(Element.WATER);
+        elementBank.add(Element.FIRE);
+        elementBank.add(Element.WOOD);
 
-        Magic magic = MagicBuilder.fromSummonedElementBank(elementBank);
+        Magic magic = MagicBuilder.buildFromSummonedElementBank(elementBank);
 
         assertThat(magic.getUsage()).isEqualTo(ElementUsage.ATTACK);
         assertThat(magic.getType()).isEqualTo(Element.WATER);
 
-        assertThat(magic.getPrimaryLevel()).isEqualTo(1);
-        assertThat(magic.getSecondaryLevel()).isEqualTo(1);
+        assertThat(magic.getPrimaryLevel()).isEqualTo(2);
+        assertThat(magic.getSecondaryLevel()).isEqualTo(2);
     }
 
     @Test
     public void buildPhysicalAttackMagic_ReturnCorrectMagic() {
-        Magic magic = MagicBuilder.physicalAttackMagic(3);
+        Magic magic = MagicBuilder.buildPhysicalAttack(3);
 
         assertThat(magic.getUsage()).isEqualTo(ElementUsage.ATTACK);
         assertThat(magic.getType()).isEqualTo(Element.NONE);

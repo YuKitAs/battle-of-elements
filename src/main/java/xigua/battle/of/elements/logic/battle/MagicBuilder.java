@@ -14,8 +14,7 @@ public final class MagicBuilder {
         Element usageElement = summonedElementBank.getFirst();
         Element typeElement = summonedElementBank.getSecond();
 
-        return new Magic(BattleHelper.getElementUsage(usageElement), typeElement, summonedElementBank
-                .getElementLevelCount(usageElement), summonedElementBank.getElementLevelCount(usageElement
+        return new Magic(BattleHelper.getElementUsage(usageElement), typeElement, summonedElementBank.getElementLevelCount(typeElement), summonedElementBank.getElementLevelCount(typeElement
                 .getDestructedElement()));
     }
 
@@ -29,17 +28,23 @@ public final class MagicBuilder {
 
     private static boolean verifyElementBank(SummonedElementBank summonedElementBank) {
         int currentSize = summonedElementBank.getCurrentSize();
-        Element usageElement = summonedElementBank.getFirst();
 
         if (currentSize < 4) {
             return false;
         }
 
-        if (summonedElementBank.getLast().getDestructedElement() != usageElement) {
+        if (summonedElementBank.getFirst() == Element.NONE) {
             return false;
         }
 
-        return summonedElementBank.getElementLevelCount(usageElement) + summonedElementBank.getElementLevelCount(
-                (usageElement.getDestructedElement())) + 3 == currentSize;
+        Element typeElement = summonedElementBank.getSecond();
+        Element endElement = summonedElementBank.getLast();
+
+        if (endElement.getDestructedElement() != typeElement) {
+            return false;
+        }
+
+        return summonedElementBank.getElementLevelCount(typeElement) + summonedElementBank.getElementLevelCount(
+                (typeElement.getDestructedElement())) + 3 == currentSize;
     }
 }
