@@ -6,7 +6,7 @@ import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 public final class MagicBuilder {
-    public static Magic fromSummonedElementBank(SummonedElementBank summonedElementBank) {
+    public static Magic buildFromSummonedElementBank(SummonedElementBank summonedElementBank) {
         if (!verifyElementBank(summonedElementBank)) {
             return Magic.EMPTY;
         }
@@ -19,8 +19,12 @@ public final class MagicBuilder {
                 .getDestructedElement()));
     }
 
-    public static Magic physicalAttackMagic(int primaryLevel) {
-        return new Magic(ElementUsage.ATTACK, Element.NONE, primaryLevel, 0);
+    public static Magic buildDebuffState(Element type, int debuffLevel) {
+        return new Magic(ElementUsage.ATTACK, type, 0, debuffLevel);
+    }
+
+    public static Magic buildPhysicalAttack(int attackLevel) {
+        return new Magic(ElementUsage.ATTACK, Element.NONE, attackLevel, 0);
     }
 
     private static boolean verifyElementBank(SummonedElementBank summonedElementBank) {
