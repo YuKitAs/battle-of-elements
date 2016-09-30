@@ -51,4 +51,25 @@ public final class EventBuilder {
         result.putAttribute("magicCasted", magicCasted);
         return result;
     }
+
+    public static Event buildMagicTargetChosenEvent(BattleField battleField, Battler battlerInTurn, Magic magic,
+            Battler target) {
+        Event result = new Event(EventType.BATTLE_MAGIC_TARGET_CHOSEN);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        result.putAttribute("magic", magic);
+        result.putAttribute("target", target);
+        return result;
+    }
+
+    public static Event buildAfterMagicEvent(BattleField battleField, Battler battlerInTurn, Battler
+            battlerInTurnBefore, Magic magic, Battler target, Battler targetBefore) {
+        Event result = new Event(EventType.BATTLE_AFTER_MAGIC);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurnBefore", battlerInTurnBefore);
+        result.putAttribute("magic", magic);
+        result.putAttribute("target", target);
+        result.putAttribute("targetBefore", targetBefore);
+        return result;
+    }
 }

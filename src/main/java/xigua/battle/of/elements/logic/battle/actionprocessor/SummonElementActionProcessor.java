@@ -12,14 +12,20 @@ import xigua.battle.of.elements.model.EventType;
 import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.ElementUsage;
+import xigua.battle.of.elements.model.battle.FreeElementBank;
 import xigua.battle.of.elements.model.battle.Magic;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SummonElementActionProcessor implements ActionProcessor {
+    private static final int NUM_OF_ELEMENTS_PER_ACTION = 2;
+
     private final ElementFactory elementFactory;
     private final Map<ElementUsage, Class<? extends MagicProcessor>> magicTypeProcessorClassMap = new HashMap<>();
 
@@ -33,43 +39,96 @@ public class SummonElementActionProcessor implements ActionProcessor {
 
     @Override
     public void process(BattleField battleField, Battler battler) {
-        summonElement(battleField, battler);
+        List<Element> restElements = summonElement(battleField, battler);
 
         castMagic(battleField, battler);
+    }
+
+    private List<Element> summonElement(BattleField battleField, Battler battler) {
+        List<Element> generatedElements = generateElements();
+
+        Element summonedElement = chooseElement(battler, generatedElements);
+
+        BattleHelper.notifyAllBattlers(battleField, EventBuilder.buildElementSummonedEvent(battleField, battler,
+                summonedElement));
+
+        if (summonedElement == null) {
+            return generatedElements;
+        }
+
+        if (battler.getSummonedElementBank().getCurrentSize() == battler.getSummonedElementBank().getMaxSize()) {
+            abandonElement(battler);
+        }
+
+        battler.getSummonedElementBank().add(summonedElement);
+
+        return generatedElements;
     }
 
     private void castMagic(BattleField battleField, Battler battler) {
         if (!MagicBuilder.canBuildMagic(battler.getSummonedElementBank())) {
             BattleHelper.notifyAllBattlers(battleField, EventBuilder.buileMagicNotCastedEvent(battleField, battler));
             return;
-        } else {
-            battler.getSummonedElementBank().clear();
         }
 
         Magic magic = MagicBuilder.buildFromSummonedElementBank(battler.getSummonedElementBank());
 
         BattleHelper.notifyAllBattlers(battleField, EventBuilder.buildMagicCastedEvent(battleField, battler, magic));
 
+        battler.getSummonedElementBank().clear();
+
         if (magic.isEmpty()) {
             return;
         }
     }
 
-    private void summonElement(BattleField battleField, Battler battler) {
-        List<Element> generatedElements = ElementSelectionHelper.generateElements(elementFactory);
-
+    private Element chooseElement(Battler battler, List<Element> generatedElements) {
         Choices elementSummonChoices = ChoicesBuilder.buildElementSelectionChoices(ChoicePurpose
-                .BATTLE_SUMMON_ELEMENT, generatedElements, battler.getFreeElementBank());
-
+                .BATTLE_SUMMON_ELEMENT, generatedElements, battler.getFreeElementBank(), new SummonedElementBank(0));
         Choices elementSummonResult = battler.getController().choose(elementSummonChoices);
 
-        Element summonedElement = ElementSelectionHelper.getSelectedElement(elementSummonResult, generatedElements,
-                battler.getFreeElementBank());
+        return getSelectedElement(elementSummonResult.getChosenIndex(), generatedElements, battler.getFreeElementBank
+                (), new SummonedElementBank(0));
+    }
 
-        BattleHelper.notifyAllBattlers(battleField, EventBuilder.buildElementSummonedEvent(battleField, battler,
-                summonedElement));
+    private void abandonElement(Battler battler) {
+        Choices elementAbandonChoices = ChoicesBuilder.buildElementSelectionChoices(ChoicePurpose
+                .BATTLE_ABANDON_ELEMENT, Collections.emptyList(), new FreeElementBank(0), battler
+                .getSummonedElementBank());
+        Choices elementAbandonResult = battler.getController().choose(elementAbandonChoices);
 
-        battler.getSummonedElementBank().add(summonedElement);
+        getSelectedElement(elementAbandonResult.getChosenIndex(), Collections.emptyList(), new FreeElementBank(0),
+                battler.getSummonedElementBank());
+    }
+
+    private List<Element> generateElements() {
+        List<Element> generatedElements = new ArrayList<>();
+        for (int i = 0; i < NUM_OF_ELEMENTS_PER_ACTION; i++) {
+            generatedElements.add(elementFactory.getElement());
+        }
+
+        return generatedElements;
+    }
+
+    private static Element getSelectedElement(int index, List<Element> generatedElements, FreeElementBank
+            freeElementBank, SummonedElementBank summonedElementBank) {
+        Element summonedElement;
+
+        if (index < generatedElements.size()) {
+            summonedElement = generatedElements.remove(index);
+        } else if (index < generatedElements.size() + freeElementBank.getCurrentSize()) {
+            summonedElement = freeElementBank.toDistinctList().get(index - generatedElements.size());
+            freeElementBank.removeElement(summonedElement);
+        } else if (index < generatedElements.size() + freeElementBank.getCurrentSize() + summonedElementBank
+                .getCurrentSize()) {
+            summonedElement = summonedElementBank.toList().get(index - generatedElements.size() - freeElementBank
+                    .getCurrentSize());
+            summonedElementBank.remove(index - generatedElements.size() - freeElementBank.getCurrentSize());
+        } else {
+            summonedElement = null;
+        }
+
+        return summonedElement;
     }
 
     /***************************************************************************************************************

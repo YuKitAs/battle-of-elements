@@ -12,17 +12,17 @@ public class BattleActionStartedEventProcessor implements EventProcessor {
         BattleField battleField = (BattleField) event.getAttribute("battleField");
         Battler battlerInTurn = (Battler) event.getAttribute("battlerInTurn");
 
-        String battlerName = battlerInTurn.getName();
         String summonedElements = DisplayHelper.getSummonedElementBankDisplay(battlerInTurn.getSummonedElementBank());
 
         if (summonedElements.isEmpty()) {
             summonedElements = "<空>";
         }
 
-        InteractionHelper.printEmptyAndLine(String.format("现在是%s的回合", battlerName));
+        InteractionHelper.printEmptyAndLine(String.format("现在是%s的回合", DisplayHelper.getBattlerNameDisplay(battlerInTurn)));
 
         if (battler.equals(battlerInTurn)) {
-            InteractionHelper.printEmptyAndLine(String.format("%s已经召唤的元素：%s", battlerName, summonedElements));
+            InteractionHelper.printEmptyAndLine(String.format("%s已经召唤的元素：%s", DisplayHelper.getBattlerNameDisplay
+                    (battlerInTurn), summonedElements));
         }
     }
 }

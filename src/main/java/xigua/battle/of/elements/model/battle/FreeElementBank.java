@@ -16,7 +16,7 @@ public class FreeElementBank extends ElementBank {
         return (int) elementList.stream().filter(elementInList -> element == elementInList).count();
     }
 
-    public void deleteElement(Element element) {
+    public void removeElement(Element element) {
         if (!elementList.remove(element)) {
             throw new RuntimeException("No such element in element bank.");
         }

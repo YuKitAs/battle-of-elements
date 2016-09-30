@@ -1,11 +1,11 @@
 package xigua.battle.of.elements.logic;
 
-import xigua.battle.of.elements.logic.battle.actionprocessor.ElementSelectionHelper;
 import xigua.battle.of.elements.model.ChoicePurpose;
 import xigua.battle.of.elements.model.Choices;
 import xigua.battle.of.elements.model.battle.Action;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.util.ArrayList;
@@ -24,14 +24,24 @@ public class ChoicesBuilder {
     }
 
     public static Choices buildElementSelectionChoices(ChoicePurpose purpose, List<Element> generatedElements,
-            FreeElementBank freeElementBank) {
+            FreeElementBank freeElementBank, SummonedElementBank summonedElementBank) {
         List<String> choiceStrings = new ArrayList<>();
 
-        generatedElements.forEach(element -> choiceStrings.add(String.format("%s:%s:1", element.name(),
-                ElementSelectionHelper.GENERATED_ELEMENT)));
-        freeElementBank.toDistinctList().forEach(element -> choiceStrings.add(String.format("%s:%s:%d", element.name
-                (), ElementSelectionHelper.STORED_ELEMENT, freeElementBank.countElement(element))));
+        generatedElements.forEach(element -> choiceStrings.add(String.format("%s:%s:1", element.name(), ElementSource
+                .GENERATED)));
+        freeElementBank.toDistinctList().forEach( //
+                element -> choiceStrings.add(String.format("%s:%s:%d", element.name(), ElementSource.STORED,
+                        freeElementBank.countElement(element))));
+        summonedElementBank.toList().forEach( //
+                element -> choiceStrings.add(String.format("%s:%s:1", element.name(), ElementSource.SUMMONED,
+                        freeElementBank.countElement(element))));
+
+        choiceStrings.add(String.format("NONE:NONE:1"));
 
         return new Choices(purpose, choiceStrings);
+    }
+
+    public enum ElementSource {
+        GENERATED, STORED, SUMMONED
     }
 }

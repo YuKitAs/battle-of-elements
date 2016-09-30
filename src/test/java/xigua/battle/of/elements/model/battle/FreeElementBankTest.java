@@ -29,14 +29,14 @@ public class FreeElementBankTest {
 
     @Test
     public void delete_ElementDoesNotExist() {
-        freeElementBank.deleteElement(Element.FIRE);
+        freeElementBank.removeElement(Element.FIRE);
 
         assertThat(freeElementBank.countElement(Element.FIRE)).isEqualTo(1);
     }
 
     @Test
     public void deleteNonExistentElement_ExceptionThrown() {
-        assertThatThrownBy(() -> freeElementBank.deleteElement(Element.WOOD)).isInstanceOf(RuntimeException.class)
+        assertThatThrownBy(() -> freeElementBank.removeElement(Element.WOOD)).isInstanceOf(RuntimeException.class)
                 .hasMessage("No such element in element bank.");
     }
 

@@ -11,49 +11,52 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MagicBuilderTest {
-    private SummonedElementBank elementBank;
+    private final SummonedElementBank summonedElementBank = new SummonedElementBank(7);
 
     @Before
     public void setUp() {
-        elementBank = new SummonedElementBank(7);
+        summonedElementBank.add(Element.FIRE);
+        summonedElementBank.add(Element.WATER);
+    }
 
-        elementBank.add(Element.FIRE);
-        elementBank.add(Element.WATER);
+    @Test
+    public void canBuildWithLessThanThreeElements_ReturnFalse() {
+        assertThat(MagicBuilder.canBuildMagic(summonedElementBank)).isFalse();
     }
 
     @Test
     public void buildWithNoMoreThanThreeElements_EmptyMagic() {
-        elementBank.add(Element.WOOD);
+        summonedElementBank.add(Element.WOOD);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
+        assertThat(MagicBuilder.buildFromSummonedElementBank(summonedElementBank).isEmpty()).isTrue();
     }
 
     @Test
     public void buildWithWrongEndElement_ExceptionThrown() {
-        elementBank.add(Element.FIRE);
-        elementBank.add(Element.FIRE);
+        summonedElementBank.add(Element.FIRE);
+        summonedElementBank.add(Element.FIRE);
 
-        assertThatThrownBy(() -> MagicBuilder.buildFromSummonedElementBank(elementBank)).isInstanceOf
+        assertThatThrownBy(() -> MagicBuilder.buildFromSummonedElementBank(summonedElementBank)).isInstanceOf
                 (RuntimeException.class);
     }
 
     @Test
     public void buildWithDuplicatedEndElement_EmptyMagic() {
-        elementBank.add(Element.WOOD);
-        elementBank.add(Element.WOOD);
+        summonedElementBank.add(Element.WOOD);
+        summonedElementBank.add(Element.WOOD);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
+        assertThat(MagicBuilder.buildFromSummonedElementBank(summonedElementBank).isEmpty()).isTrue();
     }
 
     @Test
     public void buildWithMoreThanThreeElements_ReturnCorrectMagic() {
-        elementBank.add(Element.FIRE);
-        elementBank.add(Element.WATER);
-        elementBank.add(Element.WATER);
-        elementBank.add(Element.FIRE);
-        elementBank.add(Element.WOOD);
+        summonedElementBank.add(Element.FIRE);
+        summonedElementBank.add(Element.WATER);
+        summonedElementBank.add(Element.WATER);
+        summonedElementBank.add(Element.FIRE);
+        summonedElementBank.add(Element.WOOD);
 
-        Magic magic = MagicBuilder.buildFromSummonedElementBank(elementBank);
+        Magic magic = MagicBuilder.buildFromSummonedElementBank(summonedElementBank);
 
         assertThat(magic.getUsage()).isEqualTo(ElementUsage.ATTACK);
         assertThat(magic.getType()).isEqualTo(Element.WATER);
