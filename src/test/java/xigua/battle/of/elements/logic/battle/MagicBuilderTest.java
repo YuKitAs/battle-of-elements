@@ -2,6 +2,7 @@ package xigua.battle.of.elements.logic.battle;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.ElementUsage;
 import xigua.battle.of.elements.model.battle.Magic;
@@ -24,7 +25,7 @@ public class MagicBuilderTest {
     public void buildWithNoMoreThanThreeElements_EmptyMagic() {
         elementBank.add(Element.WOOD);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
     }
 
     @Test
@@ -32,7 +33,7 @@ public class MagicBuilderTest {
         elementBank.add(Element.FIRE);
         elementBank.add(Element.FIRE);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
     }
 
     @Test
@@ -40,7 +41,7 @@ public class MagicBuilderTest {
         elementBank.add(Element.WOOD);
         elementBank.add(Element.WOOD);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank)).isEqualTo(Magic.EMPTY);
+        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
     }
 
     @Test

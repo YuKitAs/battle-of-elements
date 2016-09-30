@@ -5,8 +5,6 @@ import java.io.Serializable;
 public class Magic implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final Magic EMPTY = new Magic(ElementUsage.NONE, Element.NONE, 0, 0);
-
     private final ElementUsage usage;
     private final Element type;
     private int primaryLevel;
@@ -17,6 +15,10 @@ public class Magic implements Serializable {
         this.type = type;
         this.primaryLevel = primaryLevel;
         this.secondaryLevel = secondaryLevel;
+    }
+
+    public boolean isEmpty() {
+        return usage == ElementUsage.NONE;
     }
 
     public ElementUsage getUsage() {

@@ -14,7 +14,7 @@ public abstract class AbstractChoiceProcessor implements ChoiceProcessor {
         }
 
         InteractionHelper.printEmptyAndLine(getChoicesListHeader());
-        InteractionHelper.println(sb.toString());
+        InteractionHelper.printLine(sb.toString());
 
         int choice = InteractionHelper.readInteger("请选择：", 1, choices.getChoices().size(), "选择的范围不对！");
 

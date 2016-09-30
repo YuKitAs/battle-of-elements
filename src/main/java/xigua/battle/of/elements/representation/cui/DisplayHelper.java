@@ -1,6 +1,9 @@
 package xigua.battle.of.elements.representation.cui;
 
+import java.util.stream.Collectors;
+
 import xigua.battle.of.elements.model.battle.Element;
+import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 public final class DisplayHelper {
     public static String getElementDisplay(Element element) {
@@ -27,5 +30,10 @@ public final class DisplayHelper {
             default:
                 return "无";
         }
+    }
+
+    public static String getSummonedElementBankDisplay(SummonedElementBank summonedElementBank) {
+        return String.join(" ", summonedElementBank.toList().stream().map(DisplayHelper::getElementShortDisplay).collect(Collectors
+                .toList()));
     }
 }

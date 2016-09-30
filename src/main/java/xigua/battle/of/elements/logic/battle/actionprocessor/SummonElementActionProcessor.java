@@ -1,7 +1,10 @@
 package xigua.battle.of.elements.logic.battle.actionprocessor;
 
+import java.util.List;
+
 import xigua.battle.of.elements.logic.battle.BattleHelper;
 import xigua.battle.of.elements.logic.battle.ElementFactory;
+import xigua.battle.of.elements.logic.battle.MagicBuilder;
 import xigua.battle.of.elements.model.ChoicePurpose;
 import xigua.battle.of.elements.model.Choices;
 import xigua.battle.of.elements.model.Event;
@@ -10,8 +13,6 @@ import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.battler.Battler;
-
-import java.util.List;
 
 public class SummonElementActionProcessor implements ActionProcessor {
     private final ElementFactory elementFactory;
@@ -24,30 +25,33 @@ public class SummonElementActionProcessor implements ActionProcessor {
     public void process(BattleField battleField, Battler battler) {
         List<Element> generatedElements = ElementSelectionHelper.generateElements(elementFactory);
 
-        Choices elementSummonChoices = ElementSelectionHelper.buildElementSelectionChoices(ChoicePurpose
-                .BATTLE_SUMMON_ELEMENT, generatedElements, battler.getFreeElementBank());
+        Choices elementSummonChoices = ElementSelectionHelper.buildElementSelectionChoices(ChoicePurpose.BATTLE_SUMMON_ELEMENT,
+                generatedElements, battler.getFreeElementBank());
 
         Choices elementSummonResult = battler.getController().choose(elementSummonChoices);
 
-        Element summonedElement = ElementSelectionHelper.getSelectedElement(elementSummonResult, generatedElements,
-                battler.getFreeElementBank());
+        Element summonedElement = ElementSelectionHelper.getSelectedElement(elementSummonResult, generatedElements, battler
+                .getFreeElementBank());
 
         BattleHelper.notifyAllBattlers(battleField, buildElementSummonedEvent(battleField, battler, summonedElement));
+
+        battler.getSummonedElementBank().add(summonedElement);
+
+        if (!MagicBuilder.canBuildMagic(battler.getSummonedElementBank())) {
+            BattleHelper.notifyAllBattlers(battleField, buileMagicNotCastedEvent(battleField, battler));
+            return;
+        }
+
+        Magic magic = MagicBuilder.buildFromSummonedElementBank(battler.getSummonedElementBank());
+
+        BattleHelper.notifyAllBattlers(battleField, buildMagicCastedEvent(battleField, battler, magic));
+
+        if (magic.isEmpty()) {
+            return;
+        }
     }
 
     /***************************************************************************************************************
-
-
-
-     battler.getSummonedElementBank().add(summonedElement);
-
-     Magic magic = MagicBuilder.buildFromSummonedElementBank(battler.getSummonedElementBank());
-
-     BattleHelper.notifyAllBattlers(battleField, buildMagicCastedEvent(battleField, battler, magic));
-
-     if (magic == Magic.EMPTY) {
-     return;
-     }
 
      switch (magic.getUsage()) {
      case ATTACK:
@@ -99,6 +103,13 @@ public class SummonElementActionProcessor implements ActionProcessor {
         return result;
     }
 
+    private Event buileMagicNotCastedEvent(BattleField battleField, Battler battlerInTurn) {
+        Event result = new Event(EventType.BATTLE_MAGIC_NOT_CASTED);
+        result.putAttribute("battleField", battleField);
+        result.putAttribute("battlerInTurn", battlerInTurn);
+        return result;
+    }
+
     private Event buildMagicCastedEvent(BattleField battleField, Battler battlerInTurn, Magic magicCasted) {
         Event result = new Event(EventType.BATTLE_MAGIC_CASTED);
         result.putAttribute("battleField", battleField);
@@ -122,8 +133,8 @@ public class SummonElementActionProcessor implements ActionProcessor {
     }
 
     private interface AfterMagicEventBuilder {
-        Event build(BattleField battleField, Battler battlerInTurn, Battler battlerBeforeAttack, Battler target,
-                Battler targetBeforeAttack);
+        Event build(BattleField battleField, Battler battlerInTurn, Battler battlerBeforeAttack, Battler target, Battler
+                targetBeforeAttack);
 
         static AfterMagicEventBuilder with(EventType type) {
             return (battleField, battlerInTurn, battlerBeforeAttack, target, targetBeforeAttack) -> {

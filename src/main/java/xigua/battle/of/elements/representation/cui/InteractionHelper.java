@@ -5,15 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class InteractionHelper {
-    private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private static final int DISPLAY_DELAY_TIME = 618;
+    private static final BufferedReader STDIN = new BufferedReader(new InputStreamReader(System.in));
 
     public static void printEmptyAndLine(String text) {
         System.out.println();
-        System.out.println(text);
+        printLine(text);
     }
 
-    public static void println(String text) {
+    public static void printLine(String text) {
         System.out.println(text);
+        try {
+            Thread.sleep(DISPLAY_DELAY_TIME);
+        } catch (InterruptedException e) {
+            // This should not happen.
+        }
     }
 
     public static int readInteger(String text, int min, int max) {
@@ -27,7 +33,7 @@ public class InteractionHelper {
             System.out.print(prompt);
 
             try {
-                integer = Integer.parseInt(in.readLine());
+                integer = Integer.parseInt(STDIN.readLine());
             } catch (NumberFormatException | IOException e) {
                 throw new RuntimeException("An error occurs while reading integer.", e);
             }
