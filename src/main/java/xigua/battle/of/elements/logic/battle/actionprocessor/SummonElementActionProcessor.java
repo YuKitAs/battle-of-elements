@@ -1,38 +1,30 @@
-package xigua.battle.of.elements.logic.battle.processors;
+package xigua.battle.of.elements.logic.battle.actionprocessor;
 
 import xigua.battle.of.elements.logic.battle.BattleHelper;
 import xigua.battle.of.elements.logic.battle.ElementFactory;
-import xigua.battle.of.elements.logic.battle.MagicBuilder;
-import xigua.battle.of.elements.logic.battle.processors.MagicEffectHelper.MagicEffectProcessor;
+import xigua.battle.of.elements.model.ChoicePurpose;
 import xigua.battle.of.elements.model.Choices;
-import xigua.battle.of.elements.model.ChoicesPurpose;
 import xigua.battle.of.elements.model.Event;
 import xigua.battle.of.elements.model.EventType;
 import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.battler.Battler;
-import xigua.battle.of.elements.utility.DeepCopy;
 
 import java.util.List;
-import java.util.Set;
 
-public class SummonElementActionProcessor {
-
-    private final Battler battler;
-    private final BattleField battleField;
+public class SummonElementActionProcessor implements ActionProcessor {
     private final ElementFactory elementFactory;
 
-    public SummonElementActionProcessor(Battler battler, BattleField battleField, ElementFactory elementFactory) {
-        this.battler = battler;
-        this.battleField = battleField;
+    public SummonElementActionProcessor(ElementFactory elementFactory) {
         this.elementFactory = elementFactory;
     }
 
-    public void process() {
+    @Override
+    public void process(BattleField battleField, Battler battler) {
         List<Element> generatedElements = ElementSelectionHelper.generateElements(elementFactory);
 
-        Choices elementSummonChoices = ElementSelectionHelper.buildElementSelectionChoices(ChoicesPurpose
+        Choices elementSummonChoices = ElementSelectionHelper.buildElementSelectionChoices(ChoicePurpose
                 .BATTLE_SUMMON_ELEMENT, generatedElements, battler.getFreeElementBank());
 
         Choices elementSummonResult = battler.getController().choose(elementSummonChoices);
@@ -41,57 +33,63 @@ public class SummonElementActionProcessor {
                 battler.getFreeElementBank());
 
         BattleHelper.notifyAllBattlers(battleField, buildElementSummonedEvent(battleField, battler, summonedElement));
-
-        battler.getSummonedElementBank().add(summonedElement);
-
-        Magic magic = MagicBuilder.fromSummonedElementBank(battler.getSummonedElementBank());
-
-        BattleHelper.notifyAllBattlers(battleField, buildMagicCastedEvent(battleField, battler, magic));
-
-        if (magic == Magic.EMPTY) {
-            return;
-        }
-
-        switch (magic.getUsage()) {
-            case ATTACK:
-                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
-                        .BATTLE_ATTACK_TARGET_CHOSEN), MagicEffectHelper.getAttackProcessor(), AfterMagicEventBuilder
-                        .with(EventType.BATTLE_AFTER_ATTACK));
-                break;
-            case DEFEND:
-                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
-                        .BATTLE_DEFEND_TARGET_CHOSEN), MagicEffectHelper.getDefendProcessor(), AfterMagicEventBuilder
-                        .with(EventType.BATTLE_AFTER_DEFEND));
-                break;
-            case HEAL:
-                processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
-                        .BATTLE_HEAL_TARGET_CHOSEN), MagicEffectHelper.getHealProcessor(), AfterMagicEventBuilder
-                        .with(EventType.BATTLE_AFTER_HEAL));
-                break;
-            default:
-                throw new RuntimeException("Cannot process magic usage.");
-        }
     }
 
-    private void processMagic(Magic magic, Set<Battler> targets, MagicTargetChosenEventBuilder
-            magicTargetChosenEventBuilder, MagicEffectProcessor processor, AfterMagicEventBuilder
-            afterMagicEventBuilder) {
-        Choices targetSelectionChoices = TargetSelectionHelper.buildTargetSelectionChoices(targets);
+    /***************************************************************************************************************
 
-        Choices targetSelectionResult = battler.getController().choose(targetSelectionChoices);
 
-        Battler target = battleField.getBattler(targetSelectionResult.getChosenItem());
 
-        BattleHelper.notifyAllBattlers(battleField, magicTargetChosenEventBuilder.build(battleField, battler, target));
+     battler.getSummonedElementBank().add(summonedElement);
 
-        Battler battlerBefore = DeepCopy.copy(battler);
-        Battler targetBefore = DeepCopy.copy(target);
+     Magic magic = MagicBuilder.buildFromSummonedElementBank(battler.getSummonedElementBank());
 
-        processor.process(magic, battler, target);
+     BattleHelper.notifyAllBattlers(battleField, buildMagicCastedEvent(battleField, battler, magic));
 
-        BattleHelper.notifyAllBattlers(battleField, afterMagicEventBuilder.build(battleField, battler, battlerBefore,
-                target, targetBefore));
-    }
+     if (magic == Magic.EMPTY) {
+     return;
+     }
+
+     switch (magic.getUsage()) {
+     case ATTACK:
+     processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+     .BATTLE_ATTACK_TARGET_CHOSEN), MagicEffectHelper.getAttackProcessor(), AfterMagicEventBuilder
+     .with(EventType.BATTLE_AFTER_ATTACK));
+     break;
+     case DEFEND:
+     processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+     .BATTLE_DEFEND_TARGET_CHOSEN), MagicEffectHelper.getDefendProcessor(), AfterMagicEventBuilder
+     .with(EventType.BATTLE_AFTER_DEFEND));
+     break;
+     case HEAL:
+     processMagic(magic, battleField.getEnemiesFor(battler), MagicTargetChosenEventBuilder.with(EventType
+     .BATTLE_HEAL_TARGET_CHOSEN), MagicEffectHelper.getHealProcessor(), AfterMagicEventBuilder
+     .with(EventType.BATTLE_AFTER_HEAL));
+     break;
+     default:
+     throw new RuntimeException("Cannot process magic usage.");
+     }
+     }
+
+     private void processMagic(Magic magic, Set<Battler> targets, MagicTargetChosenEventBuilder
+     magicTargetChosenEventBuilder, MagicEffectProcessor processor, AfterMagicEventBuilder
+     afterMagicEventBuilder) {
+     Choices targetSelectionChoices = TargetSelectionHelper.buildTargetSelectionChoices(targets);
+
+     Choices targetSelectionResult = battler.getController().choose(targetSelectionChoices);
+
+     Battler target = battleField.getBattler(targetSelectionResult.getChosenItem());
+
+     BattleHelper.notifyAllBattlers(battleField, magicTargetChosenEventBuilder.build(battleField, battler, target));
+
+     Battler battlerBefore = DeepCopy.copy(battler);
+     Battler targetBefore = DeepCopy.copy(target);
+
+     processor.process(magic, battler, target);
+
+     BattleHelper.notifyAllBattlers(battleField, afterMagicEventBuilder.build(battleField, battler, battlerBefore,
+     target, targetBefore));
+     }
+     */
 
     private Event buildElementSummonedEvent(BattleField battleField, Battler battlerInTurn, Element summonedElement) {
         Event result = new Event(EventType.BATTLE_ELEMENT_SUMMONED);

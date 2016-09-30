@@ -1,6 +1,5 @@
-package xigua.battle.of.elements.logic.battle.processors;
+package xigua.battle.of.elements.logic.battle.actionprocessor;
 
-import xigua.battle.of.elements.logic.battle.BattleHelper;
 import xigua.battle.of.elements.model.battle.BattleField;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 

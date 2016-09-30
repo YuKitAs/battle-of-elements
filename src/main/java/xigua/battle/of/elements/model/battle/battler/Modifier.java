@@ -1,6 +1,10 @@
 package xigua.battle.of.elements.model.battle.battler;
 
-public class Modifier {
+import java.io.Serializable;
+
+public class Modifier implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private double modifierFactor = 1;
     private int restActions = 0;
 

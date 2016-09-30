@@ -18,12 +18,12 @@ public class ChoicesTest {
         choicesList.add("foo");
         choicesList.add("bar");
 
-        choices = new Choices(ChoicesPurpose.BATTLE_ACTION, choicesList);
+        choices = new Choices(ChoicePurpose.BATTLE_ACTION, choicesList);
     }
 
     @Test
     public void getPurpose() {
-        assertThat(choices.getPurpose()).isEqualTo(ChoicesPurpose.BATTLE_ACTION);
+        assertThat(choices.getPurpose()).isEqualTo(ChoicePurpose.BATTLE_ACTION);
     }
 
     @Test

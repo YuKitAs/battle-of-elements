@@ -1,19 +1,19 @@
-package xigua.battle.of.elements.logic.battle.processors;
+package xigua.battle.of.elements.logic.battle.actionprocessor;
 
 import xigua.battle.of.elements.model.Choices;
-import xigua.battle.of.elements.model.ChoicesPurpose;
+import xigua.battle.of.elements.model.ChoicePurpose;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-final class TargetSelectionHelper {
+public final class TargetSelectionHelper {
     protected static Choices buildTargetSelectionChoices(Set<Battler> potentialTargets) {
         List<String> choiceStrings = new ArrayList<>();
 
         potentialTargets.forEach(battler -> choiceStrings.add(battler.getName()));
 
-        return new Choices(ChoicesPurpose.BATTLE_MAGIC_TARGET, choiceStrings);
+        return new Choices(ChoicePurpose.BATTLE_MAGIC_TARGET, choiceStrings);
     }
 }

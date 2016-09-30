@@ -1,18 +1,18 @@
-package xigua.battle.of.elements.logic.battle.processors;
+package xigua.battle.of.elements.logic.battle.actionprocessor;
 
 import xigua.battle.of.elements.logic.battle.ElementFactory;
+import xigua.battle.of.elements.model.ChoicePurpose;
 import xigua.battle.of.elements.model.Choices;
-import xigua.battle.of.elements.model.ChoicesPurpose;
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.FreeElementBank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-final class ElementSelectionHelper {
+public final class ElementSelectionHelper {
     private static final int NUM_OF_ELEMENTS_PER_ACTION = 2;
-    private static final String GENERATED_ELEMENT = "GENERATED";
-    private static final String STORED_ELEMENT = "STROED";
+    public static final String GENERATED_ELEMENT = "GENERATED";
+    public static final String STORED_ELEMENT = "STROED";
 
     protected static List<Element> generateElements(ElementFactory elementFactory) {
         List<Element> generatedElements = new ArrayList<>();
@@ -23,7 +23,7 @@ final class ElementSelectionHelper {
         return generatedElements;
     }
 
-    protected static Choices buildElementSelectionChoices(ChoicesPurpose purpose, List<Element> generatedElements,
+    protected static Choices buildElementSelectionChoices(ChoicePurpose purpose, List<Element> generatedElements,
             FreeElementBank freeElementBank) {
         List<String> choiceStrings = new ArrayList<>();
 

@@ -7,7 +7,6 @@ import xigua.battle.of.elements.logic.statemachine.GameStateMock2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class MessageBoxTest {
     private static final String MESSAGE_TITLE = "Mew Message";
     private static final String MESSAGE_BODY = "Mew mew mew!";

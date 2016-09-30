@@ -144,7 +144,9 @@ public class Battler implements Serializable {
         return name.hashCode();
     }
 
-    public static class Builder {
+    public static class Builder implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         private String name = null;
         private Boolean isFriendly = null;
 

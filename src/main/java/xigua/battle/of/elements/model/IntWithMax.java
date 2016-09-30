@@ -1,9 +1,13 @@
 package xigua.battle.of.elements.model;
 
+import java.io.Serializable;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class IntWithMax {
+public class IntWithMax implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final int maxValue;
     private int value;
 

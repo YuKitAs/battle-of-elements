@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Choices {
     private int chosenIndex;
-    private final ChoicesPurpose purpose;
+    private final ChoicePurpose purpose;
     private final List<String> choices;
 
-    public Choices(ChoicesPurpose purpose, List<String> choices) {
+    public Choices(ChoicePurpose purpose, List<String> choices) {
         this.purpose = purpose;
         this.choices = choices;
     }
 
-    public ChoicesPurpose getPurpose() {
+    public ChoicePurpose getPurpose() {
         return purpose;
     }
 
