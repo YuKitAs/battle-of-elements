@@ -19,8 +19,7 @@ public class BattleActionStartedEventProcessor implements EventProcessor {
             summonedElements = "<空>";
         }
 
-        InteractionHelper.printEmptyAndLine("=====================");
-        InteractionHelper.printLine(String.format("现在是%s的回合", battlerName));
+        InteractionHelper.printEmptyAndLine(String.format("现在是%s的回合", battlerName));
 
         if (battler.equals(battlerInTurn)) {
             InteractionHelper.printEmptyAndLine(String.format("%s已经召唤的元素：%s", battlerName, summonedElements));

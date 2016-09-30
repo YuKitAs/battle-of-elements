@@ -9,6 +9,6 @@ public class BattleActionEndedEventProcessor implements EventProcessor {
     public void process(Battler battler, Event event) {
         Battler battlerInTurn = (Battler) event.getAttribute("battlerInTurn");
 
-        InteractionHelper.printEmptyAndLine(String.format("%s的回合结束了", battlerInTurn.getName()));
+        InteractionHelper.printEmptyAndLine(String.format("%s的回合结束了\n\n====================", battlerInTurn.getName()));
     }
 }

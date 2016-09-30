@@ -16,13 +16,6 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class BattleHelperTest {
-    @Test
-    public void getElementUsage_WithCorrectElementUsage() {
-        assertThat(BattleHelper.getElementUsage(Element.FIRE)).isEqualTo(ElementUsage.ATTACK);
-        assertThat(BattleHelper.getElementUsage(Element.WATER)).isEqualTo(ElementUsage.DEFEND);
-        assertThat(BattleHelper.getElementUsage(Element.WOOD)).isEqualTo(ElementUsage.HEAL);
-        assertThat(BattleHelper.getElementUsage(Element.NONE)).isEqualTo(ElementUsage.NONE);
-    }
 
     @Test
     public void notify_AllBattlersNotified() {

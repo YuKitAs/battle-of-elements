@@ -14,11 +14,11 @@ public class InteractionHelper {
     }
 
     public static void printLine(String text) {
-        System.out.println(text);
+        System.out.print(text);
         try {
-            Thread.sleep(DISPLAY_DELAY_TIME);
-        } catch (InterruptedException e) {
-            // This should not happen.
+            STDIN.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurs while reading enter key.", e);
         }
     }
 
@@ -35,7 +35,7 @@ public class InteractionHelper {
             try {
                 integer = Integer.parseInt(STDIN.readLine());
             } catch (NumberFormatException | IOException e) {
-                throw new RuntimeException("An error occurs while reading integer.", e);
+                integer = Integer.MAX_VALUE;
             }
 
             if (integer < min || integer > max) {

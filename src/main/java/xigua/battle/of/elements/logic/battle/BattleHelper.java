@@ -9,17 +9,4 @@ public final class BattleHelper {
     public static void notifyAllBattlers(BattleField battleField, Event event) {
         battleField.getAllBattlers().forEach(battler -> battler.getObserver().notify(event));
     }
-
-    public static ElementUsage getElementUsage(Element element) {
-        switch (element) {
-            case FIRE:
-                return ElementUsage.ATTACK;
-            case WATER:
-                return ElementUsage.DEFEND;
-            case WOOD:
-                return ElementUsage.HEAL;
-            default:
-                return ElementUsage.NONE;
-        }
-    }
 }

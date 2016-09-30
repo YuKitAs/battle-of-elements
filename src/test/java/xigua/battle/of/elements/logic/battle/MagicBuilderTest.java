@@ -2,13 +2,13 @@ package xigua.battle.of.elements.logic.battle;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import xigua.battle.of.elements.model.battle.Element;
 import xigua.battle.of.elements.model.battle.ElementUsage;
 import xigua.battle.of.elements.model.battle.Magic;
 import xigua.battle.of.elements.model.battle.SummonedElementBank;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MagicBuilderTest {
     private SummonedElementBank elementBank;
@@ -29,11 +29,12 @@ public class MagicBuilderTest {
     }
 
     @Test
-    public void buildWithWrongEndElement_EmptyMagic() {
+    public void buildWithWrongEndElement_ExceptionThrown() {
         elementBank.add(Element.FIRE);
         elementBank.add(Element.FIRE);
 
-        assertThat(MagicBuilder.buildFromSummonedElementBank(elementBank).isEmpty()).isTrue();
+        assertThatThrownBy(() -> MagicBuilder.buildFromSummonedElementBank(elementBank)).isInstanceOf
+                (RuntimeException.class);
     }
 
     @Test

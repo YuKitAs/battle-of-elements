@@ -18,7 +18,7 @@ public final class MagicBuilder {
         Element usageElement = summonedElementBank.getFirst();
         Element typeElement = summonedElementBank.getSecond();
 
-        return new Magic(BattleHelper.getElementUsage(usageElement), typeElement, summonedElementBank.getElementLevelCount(typeElement),
+        return new Magic(getElementUsage(usageElement), typeElement, summonedElementBank.getElementLevelCount(typeElement),
                 summonedElementBank.getElementLevelCount(typeElement.getDestructedElement()));
     }
 
@@ -60,5 +60,18 @@ public final class MagicBuilder {
 
         return summonedElementBank.getElementLevelCount(primaryElement) + summonedElementBank.getElementLevelCount(secondaryElement) + 3
                 == currentSize;
+    }
+
+    private static ElementUsage getElementUsage(Element element) {
+        switch (element) {
+            case FIRE:
+                return ElementUsage.ATTACK;
+            case WATER:
+                return ElementUsage.DEFEND;
+            case WOOD:
+                return ElementUsage.HEAL;
+            default:
+                return ElementUsage.NONE;
+        }
     }
 }

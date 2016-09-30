@@ -23,18 +23,6 @@ public final class ElementSelectionHelper {
         return generatedElements;
     }
 
-    protected static Choices buildElementSelectionChoices(ChoicePurpose purpose, List<Element> generatedElements,
-            FreeElementBank freeElementBank) {
-        List<String> choiceStrings = new ArrayList<>();
-
-        generatedElements.forEach(element -> choiceStrings.add(String.format("%s:%s:1", element.name(),
-                GENERATED_ELEMENT)));
-        freeElementBank.toDistinctList().forEach(element -> choiceStrings.add(String.format("%s:%s:%d", element.name
-                (), STORED_ELEMENT, freeElementBank.countElement(element))));
-
-        return new Choices(purpose, choiceStrings);
-    }
-
     protected static Element getSelectedElement(Choices choices, List<Element> generatedElements, FreeElementBank
             freeElementBank) {
         Element selectedElement;
