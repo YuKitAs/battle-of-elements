@@ -7,7 +7,6 @@ import xigua.battle.of.elements.logic.battle.actionprocessor.SummonElementAction
 import xigua.battle.of.elements.model.Choices;
 import xigua.battle.of.elements.model.battle.Action;
 import xigua.battle.of.elements.model.battle.BattleField;
-import xigua.battle.of.elements.model.battle.Environment;
 import xigua.battle.of.elements.model.battle.battler.Battler;
 
 import java.util.Collections;
@@ -22,11 +21,10 @@ public class BattleArbiter {
     private final BattleField battleField;
     private final Map<Action, ActionProcessor> actionProcessorMap = new HashMap<>();
 
-    public BattleArbiter(Environment environment, Set<Battler> battlers) {
-        battleField = new BattleField(battlers, environment);
+    public BattleArbiter(ElementFactory elementFactory, Set<Battler> battlers) {
+        battleField = new BattleField(battlers);
 
-        actionProcessorMap.put(Action.SUMMON_ELEMENT, new SummonElementActionProcessor(new ElementFactory
-                (environment)));
+        actionProcessorMap.put(Action.SUMMON_ELEMENT, new SummonElementActionProcessor(elementFactory));
     }
 
     public void start() {

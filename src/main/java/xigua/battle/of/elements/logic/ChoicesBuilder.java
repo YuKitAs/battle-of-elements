@@ -11,6 +11,7 @@ import xigua.battle.of.elements.model.battle.battler.Battler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChoicesBuilder {
     public static Choices buildActionChoices(Battler battler) {
@@ -33,12 +34,16 @@ public class ChoicesBuilder {
                 element -> choiceStrings.add(String.format("%s:%s:%d", element.name(), ElementSource.STORED,
                         freeElementBank.countElement(element))));
         summonedElementBank.toList().forEach( //
-                element -> choiceStrings.add(String.format("%s:%s:1", element.name(), ElementSource.SUMMONED,
-                        freeElementBank.countElement(element))));
+                element -> choiceStrings.add(String.format("%s:%s:1", element.name(), ElementSource.SUMMONED)));
 
-        choiceStrings.add(String.format("NONE:NONE:1"));
+        choiceStrings.add("NONE:NONE:1");
 
         return new Choices(purpose, choiceStrings);
+    }
+
+    public static Choices buildMagicTargetChoices(List<Battler> targetBattlers) {
+        return new Choices(ChoicePurpose.BATTLE_MAGIC_TARGET, targetBattlers.stream().map(Battler::getName).collect
+                (Collectors.toList()));
     }
 
     public enum ElementSource {

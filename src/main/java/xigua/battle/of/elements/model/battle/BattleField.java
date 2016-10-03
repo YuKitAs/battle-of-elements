@@ -12,15 +12,9 @@ public class BattleField implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Set<Battler> battlers = new HashSet<>();
-    private final Environment environment;
 
-    public BattleField(Set<Battler> battlers, Environment environment) {
+    public BattleField(Set<Battler> battlers) {
         battlers.forEach(this::addBattler);
-        this.environment = environment;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
     }
 
     public Set<Battler> getAllBattlers() {

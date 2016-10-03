@@ -62,7 +62,7 @@ public final class EventBuilder {
         return result;
     }
 
-    public static Event buildAfterMagicEvent(BattleField battleField, Battler battlerInTurn, Battler
+    public static Event buildMagicProcessedEvent(BattleField battleField, Battler battlerInTurn, Battler
             battlerInTurnBefore, Magic magic, Battler target, Battler targetBefore) {
         Event result = new Event(EventType.BATTLE_AFTER_MAGIC);
         result.putAttribute("battleField", battleField);
